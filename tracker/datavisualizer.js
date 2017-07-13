@@ -1,31 +1,5 @@
 var numPackets = -1;
 
-var config = {
-    type: 'line',
-    data: {
-        labels: packetIndex,
-        datasets: dataSetsConfig
-    },
-    options: {
-        responsive: true,
-        title:{
-            display:true,
-            text:'Chart.js Line Chart'
-        },
-        tooltips: {
-            mode: 'index',
-            intersect: true,
-        },
-        hover: {
-            mode: 'nearest',
-            intersect: true
-        },
-        scales: {
-            xAxes: xAxesConfig,
-            yAxes: yAxesConfig                }
-    }
-};
-
 window.onload = function() {
     var ctx = document.getElementById("canvas").getContext("2d");
     window.myLine = new Chart(ctx, config);

@@ -1,11 +1,18 @@
+/** 
+* @fileOverview This file contains the configuration options for the line chart.
+* @author <a href="https://github.com/jmromeo">Joseph Romeo</a>
+*/
+
+/////////////////////////////////////////////////////////////////////////////// 
 // Data arrays for chart...will probably move these to different file to be used for things other than data visualization
+//
 var elevationData   = [];
 var temperatureData = [];
 var packetIndex     = [];
 
 
 /////////////////////////////////////////////////////////////////////////////// 
-// Dataset visualization configurations (ie: )
+// Dataset visualization configuration (ie: line color, datapoint names, etc)
 //
 
 // enum for dataset access 
@@ -40,7 +47,7 @@ var dataSetsConfig =
 
 
 /////////////////////////////////////////////////////////////////////////////// 
-// Configuration for default axes
+// Configuration of x/y axes
 //
 var xAxesConfig = 
 [
@@ -84,3 +91,34 @@ var yAxesConfig =
         }
     }
 ];
+
+
+/////////////////////////////////////////////////////////////////////////////// 
+// Miscallaneous chart configuration + all previous chart configurations
+//
+var config = {
+    type: 'line',
+    data: {
+        labels: packetIndex,
+        datasets: dataSetsConfig
+    },
+    options: {
+        responsive: true,
+        title:{
+            display:true,
+            text:'Chart.js Line Chart'
+        },
+        tooltips: {
+            mode: 'index',
+            intersect: true,
+        },
+        hover: {
+            mode: 'nearest',
+            intersect: true
+        },
+        scales: {
+            xAxes: xAxesConfig,
+            yAxes: yAxesConfig                }
+    }
+};
+
