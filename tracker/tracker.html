@@ -10,6 +10,11 @@
     <script src="datavisualizer_config.js"></script>
     <script src="datavisualizer.js"></script>
 
+    <!-- Bootstrap -->
+    <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="bootstrap/js/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+
     <style>
       canvas{
           -moz-user-select: none;
@@ -20,12 +25,23 @@
 </head>
 
 <body>
-    <div style="width:75%;">
-        <canvas id="canvas"></canvas>
+    <div class="row">
+        <div class="col-md-12">
+            <canvas id="canvas"></canvas>
+        <div/>
+    <div/>
+
+    <div class="row">
+        <div class="col-md-4">
+            <button class="btn btn-default btn-lg btn-block" onclick="addDataPoint(this)">Add Data Point</button>
+        </div>
+        <div class="col-md-4">
+            <button class="btn btn-default btn-lg btn-block" id="toggleAltitude" onclick="toggleData(this)">Altitude</button>
+        </div>
+        <div class="col-md-4">
+            <button class="btn btn-default btn-lg btn-block" id="toggleTemperature" onclick="toggleData(this)">Temperature</button>
+        </div>
     </div>
-    <button onclick="addDataPoint(this)">Add Data Point</button>
-    <button id="toggleAltitude" onclick="toggleData(this)">Altitude</button>
-    <button id="toggleTemperature" onclick="toggleData(this)">Temperature</button>
 </body>
 
 </html>

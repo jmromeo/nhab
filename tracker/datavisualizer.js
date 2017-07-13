@@ -1,3 +1,7 @@
+/**
+* @fileOverview Produces line chart 
+*/
+
 var numPackets = -1;
 
 window.onload = function() {
