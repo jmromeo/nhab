@@ -27,7 +27,7 @@ var dataSetsConfig =
 [
     // Temperature data
     {
-        label: "Temperature in Celsius",
+        label: "Temperature in °C",
         borderColor: window.chartColors.green,
         data: temperatureData,
         fill: false,
@@ -73,7 +73,7 @@ var yAxesConfig =
         display: true,
         scaleLabel: {
             display: true,
-            labelString: 'Altitude'
+            labelString: 'Meters'
         }
     },
 
@@ -84,7 +84,7 @@ var yAxesConfig =
         position: "right",
         scaleLabel: {
             display: true,
-            labelString: 'Temperature'
+            labelString: '°C'
         },
         gridLines: {
             drawOnChartArea: false
