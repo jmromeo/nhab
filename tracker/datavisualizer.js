@@ -16,7 +16,6 @@ class DataVisualizer
       // binding functions to "this" context
       this.addDataPoint = this.addDataPoint.bind(this);
       this.initToggleButtons = this.initToggleButtons.bind(this);
-      this.toggleData = this.toggleData.bind(this);
 
       /**
        * Number of total packets added to chart.
@@ -47,6 +46,17 @@ class DataVisualizer
        */
       this.chart;
 
+      this.toggleData = function(button)
+      {
+          var dataSetIndex = button.getAttribute('data-data-set-index');
+          var dataSet = this.chart.config.data.datasets[dataSetIndex];
+
+          dataSet.hidden = !dataSet.hidden;
+
+          this.chart.update();
+      }.bind(this)
+
+
       // creating and configuring chart
       var ctx = document.getElementById(id).getContext("2d");
       this.chart = new Chart(ctx, config);
@@ -75,9 +85,7 @@ class DataVisualizer
         packetIndex.push(actualPacketIndex[i]);
       } 
 
-      Chart.helpers.each(Chart.instances, function(chart) {
-          chart.update();
-      }); 
+      this.chart.update();
   }
 
   // adding the dataset enum property to each toggle button for use in toggleData function below
@@ -92,15 +100,6 @@ class DataVisualizer
       button.setAttribute('data-data-set-index', DataSet.ALTITUDE);
   }
 
-  toggleData(button)
-  {
-      var dataSetIndex = button.getAttribute('data-data-set-index');
-      var dataSet = this.chart.config.data.datasets[dataSetIndex];
-
-      dataSet.hidden = !dataSet.hidden;
-
-      this.chart.update();
-  }
 }
 
 
