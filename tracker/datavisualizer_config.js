@@ -68,22 +68,38 @@ var yAxesConfig =
 [
     // Altitude Y Axis
     {
+       ticks: { 
+            callback: function(label, index, labels) {
+                if (index == 0) {
+                    return yAxesConfig[0].scaleLabel.labelString;
+                }
+                return Math.round(label);
+            }
+        },
         id: "y-axis-altitude",
         position: "left",
         display: true,
         scaleLabel: {
-            display: true,
+            display: false,
             labelString: 'Meters'
         }
     },
 
     // Temperature Y Axis
     {
+       ticks: { 
+            callback: function(label, index, labels) {
+                if (index == 0) {
+                    return yAxesConfig[1].scaleLabel.labelString;
+                }
+                return Math.round(label);
+            }
+        },
         id: "y-axis-temperature",
         display: true,
         position: "right",
         scaleLabel: {
-            display: true,
+            display: false,
             labelString: '°C'
         },
         gridLines: {
