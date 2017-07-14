@@ -12,6 +12,9 @@ class DataVisualizer
     var ctx = document.getElementById(id).getContext("2d");
     window.myLine = new Chart(ctx, config);
     this.initToggleButtons();
+
+    Chart.defaults.global.defaultFontColor = "#ebebeb";
+    Chart.defaults.global.defaultFontFamily = "'Lato','Helvetica Neue','Helvetica','Arial',sans-serif";
   }
 
   addDataPoint()
@@ -35,6 +38,7 @@ class DataVisualizer
       } 
 
       Chart.helpers.each(Chart.instances, function(chart) {
+          console.log(chart);
           chart.update();
       }); 
   }
@@ -53,8 +57,6 @@ class DataVisualizer
 
   toggleData(button)
   {
-      console.log(button);
-
       Chart.helpers.each(Chart.instances, function(chart) {
           var dataSetIndex = button.getAttribute('data-data-set-index');
           var dataSet = chart.config.data.datasets[dataSetIndex];

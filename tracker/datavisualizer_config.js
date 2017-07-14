@@ -62,7 +62,7 @@ var xAxesConfig =
             maxRotation: 0
         },
         scaleLabel: {
-            display: true,
+            display: false,
             labelString: 'Packet Number'
         }
     }
@@ -133,7 +133,13 @@ var config = {
         },
         scales: {
             xAxes: xAxesConfig,
-            yAxes: yAxesConfig                }
+            yAxes: yAxesConfig                
+        },
+        legend: {
+            labels: {
+                fontSize: 15 
+            }
+        }
     }
 };
 
