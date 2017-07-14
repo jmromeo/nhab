@@ -27,7 +27,7 @@ var dataSetsConfig =
 [
     // Temperature data
     {
-        label: "Temperature in °C",
+        label: "Temperature",
         borderColor: window.chartColors.green,
         data: temperatureData,
         fill: false,
@@ -36,7 +36,7 @@ var dataSetsConfig =
 
     // Altitude Data
     {
-        label: "Altitude in Meters",
+        label: "Altitude",
         backgroundColor: Samples.utils.transparentize(window.chartColors.red, 0.9),
         borderColor: window.chartColors.red,
         data: elevationData,
