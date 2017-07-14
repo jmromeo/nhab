@@ -4,7 +4,7 @@
 <head>
     <title>High Altitude Balloon Tracker</title>
 
-    <!-- javascripts used for generating the line chart -->
+    <!-- javascript used for generating the line chart -->
     <script src="node_modules/chart.js/dist/Chart.bundle.js"></script>
     <script src="node_modules/chart.js/samples/utils.js"></script>
     <script src="datavisualizer_config.js"></script>
@@ -14,6 +14,9 @@
     <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
     <script type="text/javascript" src="bootstrap/js/jquery-3.1.1.min.js"></script>
     <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- My styling -->
+    <link rel="stylesheet" type="text/css" href="css/tracker.css">
 
     <meta charset="UTF-8">
 
@@ -27,26 +30,42 @@
 </head>
 
 <body>
-    <div class="row">
-        <div class="col-md-1"></div>
-        <div class="col-md-10">
-            <canvas id="linechart"></canvas>
+
+    <!-- Jumbotron Header -->
+    <div class="jumbotron">
+        <div class="container">
+            <h1>High Altitude Balloon Tracker</h1>
+            <br><br>
+            <p>
+                This is the NHAB (Nomeo High Altitude Balloon) Tracker! It can capture GPS, barometric pressure, altitude, compass
+                data, etc. sent from an XBee module. This tracking software will allow you to see real time where your balloon is going
+                and provides some data visualization tools to make your high altitude adventures more fun!
+            </p>
         </div>
-        <div class="col-md-1"></div>
     </div>
 
-    <div class="row">
-        <div class="col-md-1"></div>
-        <div class="col-md-3">
-            <button class="btn btn-default btn-lg btn-block" onclick="chart.addDataPoint(this)">Add Data Point</button>
+    <!-- Line Chart -->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <canvas id="linechart"></canvas>
+            </div>
         </div>
-        <div class="col-md-4">
-            <button class="btn btn-default btn-lg btn-block" id="toggleAltitude" onclick="chart.toggleData(this)">Altitude</button>
+    </div>
+
+    <!-- Line Chart Toggle Buttons -->
+    <div class="container">
+        <div class="row chart-toggle-buttons">
+            <div class="col-md-4">
+                <button class="btn btn-default btn-lg btn-block" onclick="chart.addDataPoint(this)">Add Data Point</button>
+            </div>
+            <div class="col-md-4">
+                <button class="btn btn-default btn-lg btn-block" id="toggleAltitude" onclick="chart.toggleData(this)">Altitude</button>
+            </div>
+            <div class="col-md-4">
+                <button class="btn btn-default btn-lg btn-block" id="toggleTemperature" onclick="chart.toggleData(this)">Temperature</button>
+            </div>
         </div>
-        <div class="col-md-3">
-            <button class="btn btn-default btn-lg btn-block" id="toggleTemperature" onclick="chart.toggleData(this)">Temperature</button>
-        </div>
-        <div class="col-md-1"></div>
     </div>
 </body>
 
