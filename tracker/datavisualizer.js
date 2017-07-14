@@ -2,22 +2,14 @@
 * @fileOverview Produces line chart 
 */
 
-
-//window.onload = function() {
-//    var ctx = document.getElementById("canvas").getContext("2d");
-//    window.myLine = new Chart(ctx, config);
-//    initToggleButtons();
-//};
-
-
 class DataVisualizer 
 {
 
-  constructor() 
+  constructor(id) 
   {
     this.numPackets = -1;
 
-    var ctx = document.getElementById("canvas").getContext("2d");
+    var ctx = document.getElementById(id).getContext("2d");
     window.myLine = new Chart(ctx, config);
     this.initToggleButtons();
   }
@@ -65,7 +57,5 @@ class DataVisualizer
 var chart;
 
 window.onload = function() {
-  chart = new DataVisualizer();
+  chart = new DataVisualizer("linechart");
 };
-
-//setTimeout(addDataPoint, 1000);
