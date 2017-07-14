@@ -7,7 +7,7 @@ class DataVisualizer
 
   constructor(id) 
   {
-    this.numPackets = -1;
+    this.numPackets = 0;
 
     var ctx = document.getElementById(id).getContext("2d");
     window.myLine = new Chart(ctx, config);
@@ -16,15 +16,27 @@ class DataVisualizer
 
   addDataPoint()
   {
-      elevationData.push(Math.floor(Math.random() * 50000));
-      temperatureData.push(Math.floor(Math.random() * 100));
-      packetIndex.push(++this.numPackets);
+      var numDisplayPoints;
+
+      actualElevationData.push(Math.floor(Math.random() * 50000));
+      actualTemperatureData.push(Math.floor(Math.random() * 100));
+      actualPacketIndex.push(++this.numPackets);
+      temperatureData.length = 0;
+      elevationData.length = 0;
+      packetIndex.length = 0;
+
+      var startIndex = (this.numPackets > 25) ? this.numPackets - 25 : 0;
+      var endIndex = (this.numPackets > 25) ? startIndex + 25 : this.numPackets;
+
+      for (var i = startIndex; i < endIndex; i++) {
+        temperatureData.push(actualTemperatureData[i]);
+        elevationData.push(actualElevationData[i]); 
+        packetIndex.push(actualPacketIndex[i]);
+      } 
 
       Chart.helpers.each(Chart.instances, function(chart) {
           chart.update();
       }); 
-
-  //    setTimeout(addDataPoint, 1000);
   }
 
   // adding the dataset enum property to each toggle button for use in toggleData function below

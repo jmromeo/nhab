@@ -9,6 +9,9 @@
 var elevationData   = [];
 var temperatureData = [];
 var packetIndex     = [];
+var actualElevationData = [];
+var actualTemperatureData = [];
+var actualPacketIndex = [];
 
 
 /////////////////////////////////////////////////////////////////////////////// 
@@ -55,7 +58,7 @@ var xAxesConfig =
         display: true,
         ticks: {
             autoSkip: true,
-            maxTicksLimit: 20,
+            maxTicksLimit: 10,
             maxRotation: 0
         },
         scaleLabel: {
