@@ -2,8 +2,15 @@
 * @fileOverview Produces line chart 
 */
 
+/**  */
 class DataVisualizer 
 {
+  /**
+   * @class DataVisualizer
+   * @classdesc DataVisualizer is a wrapper class for line-chart in chart.js.
+   *
+   * @param {string} id - ID of canvas that chart should be rendered on.
+   */
   constructor(id) 
   {
       // binding functions to "this" context
@@ -11,9 +18,33 @@ class DataVisualizer
       this.initToggleButtons = this.initToggleButtons.bind(this);
       this.toggleData = this.toggleData.bind(this);
 
-      // member variables
+      /**
+       * Number of total packets added to chart.
+       *
+       * @private
+       * @name DataVisualizer#numPackets
+       * @type Integer
+       * @default 0
+       */
       this.numPackets = 0;
+
+      /**
+       * Number of data points to display on line chart.
+       * 
+       * @private
+       * @name DataVisualizer#numDisplayPoints
+       * @type Integer
+       * @default 25
+       */
       this.numDisplayPoints = 25;
+
+      /**
+       * Chart object to be used by chartjs for chart manipulation>
+       * 
+       * @private
+       * @name DataVisualizer#chart
+       * @type Object
+       */
       this.chart;
 
       // creating and configuring chart
