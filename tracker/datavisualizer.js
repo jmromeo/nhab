@@ -47,6 +47,7 @@ class DataVisualizer
           var dataSetIndex = button.getAttribute('data-data-set-index');
           var dataSet = this.chart.config.data.datasets[dataSetIndex];
 
+          // toggling data visibility
           dataSet.hidden = !dataSet.hidden;
 
           this.chart.update();
@@ -82,6 +83,7 @@ class DataVisualizer
       function initToggleButtons()
       {
           var button; 
+
 
           button = document.getElementById("toggleTemperature");
           button.setAttribute('data-data-set-index', DataSet.TEMPERATURE);

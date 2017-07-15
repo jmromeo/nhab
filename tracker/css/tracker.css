@@ -5,3 +5,11 @@
 .line-chart {
 	padding-bottom: 20px;
 }
+
+.btn.altitude-color {
+	background: #FF6384 !important; 
+}
+
+.btn.temperature-color {
+	background: #4BC0C0 !important;
+}
