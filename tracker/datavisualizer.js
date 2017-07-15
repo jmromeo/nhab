@@ -52,9 +52,11 @@ class DataVisualizer
       {
           var dataSetIndex = button.getAttribute('data-data-set-index');
           var dataSet = this.chart.config.data.datasets[dataSetIndex];
+          var yAxis = this.chart.config.options.scales.yAxes[dataSetIndex];
 
-          // toggling data visibility
+          // toggling data and axis visibility
           dataSet.hidden = !dataSet.hidden;
+          yAxis.display = !yAxis.display;
 
           this.chart.update();
       }.bind(this)
@@ -104,6 +106,10 @@ class DataVisualizer
                   backgroundColor: Samples.utils.transparentize(configs[i].color, 0.9),
                   fill: configs[i].fill,
                   yAxisID: configs[i].buttonId
+              };
+
+              var axesConfig = {
+
               }
 
               yAxesConfig[i].id = configs[i].buttonId;
@@ -120,12 +126,9 @@ class DataVisualizer
               dataSetsConfig.push(dataConfig);
           }
 
+          // setting up config variable for chart
           config.options.scales.yAxes = yAxesConfig;
           config.data.datasets = dataSetsConfig;
-
-          console.log(yAxesConfig);
-          console.log(dataSetsConfig);
-          console.log(config);
       }
 
       /**
@@ -158,7 +161,6 @@ class DataVisualizer
       this.chart = new Chart(ctx, config);
       Chart.defaults.global.defaultFontColor = "#ebebeb";
       Chart.defaults.global.defaultFontFamily = "'Lato','Helvetica Neue','Helvetica','Arial',sans-serif";
-
 
       // initializing toggle buttons
       initToggleButtons(configs);
