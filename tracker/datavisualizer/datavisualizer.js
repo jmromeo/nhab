@@ -11,7 +11,6 @@ class DataVisualizer
      * @param {string}    id -                                  ID of canvas that chart should be rendered on.
      * @param {Objects[]} visualizerConfig -                    The configuration for y-axes data.
      * @param {string}    visualizerConfig[].buttonId -         The ID of toggle button corresponding to y-axes data.
-     * @param {bool}      visualizerConfig[].buttonToggle -     True if toggle button exists for data, false otherwise.
      * @param {integer}   visualizerConfig[].datasetIndex -     Index attribute set on buttonId.
      * @param {string}    visualizerConfig[].name -             Name of data to be used as label.
      * @param {string}    visualizerConfig[].units -            Units used for data (ie meters).
@@ -98,6 +97,7 @@ class DataVisualizer
          */
         this.toggleData = function(button)
         {
+            console.log(button);
             var dataSetIndex = button.getAttribute('data-data-set-index');
             var dataSet = this.chart.config.data.datasets[dataSetIndex];
             var yAxis = this.chart.config.options.scales.yAxes[dataSetIndex];
@@ -127,8 +127,6 @@ class DataVisualizer
             var endIndex;
             var i, j;
 
-            //actualElevationData.push(Math.floor(Math.random() * 50000));
-            //actualTemperatureData.push(Math.floor(Math.random() * 100));
             actualPacketIndex.push(++this.numPackets);
 
             startIndex = (this.numPackets > this.numDisplayPoints) ? (this.numPackets - this.numDisplayPoints) : 0;
@@ -165,7 +163,6 @@ class DataVisualizer
          * @private
          * @param {Objects[]} visualizerConfig                - The configuration for y-axes data.
          * @param {string}    visualizerConfig[].buttonId     - The ID of toggle button corresponding to y-axes data.
-         * @param {bool}      visualizerConfig[].buttonToggle - True if toggle button exists for data, false otherwise.
          * @param {integer}   visualizerConfig[].datasetIndex - Index attribute set on buttonId.
          * @param {string}    visualizerConfig[].name         - Name of data to be used as label.
          * @param {string}    visualizerConfig[].units        - Units used for data (ie meters).
@@ -235,7 +232,6 @@ class DataVisualizer
          * @private
          * @param {Objects[]} visualizerConfig                - The configuration for y-axes data.
          * @param {string}    visualizerConfig[].buttonId     - The ID of toggle button corresponding to y-axes data.
-         * @param {bool}      visualizerConfig[].buttonToggle - True if toggle button exists for data, false otherwise.
          * @param {integer}   visualizerConfig[].datasetIndex - Index attribute set on buttonId.
          * @param {string}    visualizerConfig[].name         - Name of data to be used as label.
          * @param {string}    visualizerConfig[].units        - Units used for data (ie meters).
@@ -245,14 +241,10 @@ class DataVisualizer
         {
             var button; 
 
-            for (var i = 0; i < visualizerConfig.length-1; i++)
+            for (var i = 0; i < visualizerConfig.length; i++)
             {
-                // if data that isn't shown on graph it won't need a toggle button setup
-                if (visualizerConfig[i].buttonToggle = true) 
-                {
-                    button = document.getElementById(visualizerConfig[i].buttonId);
-                    button.setAttribute('data-data-set-index', visualizerConfig[i].datasetIndex);
-                }
+                button = document.getElementById(visualizerConfig[i].buttonId);
+                button.setAttribute('data-data-set-index', visualizerConfig[i].datasetIndex);
             }
         }
 

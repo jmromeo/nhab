@@ -7,8 +7,6 @@
 // Data arrays for chart...will probably move these to different file to be used for things other than data visualization
 //
 var packetIndex     = [];
-var actualElevationData = [];
-var actualTemperatureData = [];
 var actualPacketIndex = [];
 
 
