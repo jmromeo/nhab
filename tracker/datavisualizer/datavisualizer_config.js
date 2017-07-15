@@ -54,7 +54,7 @@ var config = {
         responsive: true,
         tooltips: {
             mode: 'index',
-            intersect: true,
+            intersect: true
         },
         hover: {
             mode: 'nearest',

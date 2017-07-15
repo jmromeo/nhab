@@ -8,14 +8,15 @@ class DataVisualizer
      * @class DataVisualizer
      * @classdesc DataVisualizer is a wrapper class for line-chart in chart.js.
      *
-     * @param {string}    id -                              ID of canvas that chart should be rendered on.
-     * @param {Objects[]} visualizerConfig -                The configuration for y-axes data.
-     * @param {string}    visualizerConfig[].buttonID -     The ID of toggle button corresponding to y-axes data.
-     * @param {integer}   visualizerConfig[].datasetIndex - Index attribute set on buttonID.
-     * @param {integer}   visualizerConfig[].display      - Whether or not data should be displayed
-     * @param {string}    visualizerConfig[].name -         Name of data to be used as label.
-     * @param {string}    visualizerConfig[].units -        Units used for data (ie meters).
-     * @param {string}    visualizerConfig[].fill -         Determines whether this data should be represented as area or line chart.
+     * @param {string}    id -                                  ID of canvas that chart should be rendered on.
+     * @param {Objects[]} visualizerConfig -                    The configuration for y-axes data.
+     * @param {string}    visualizerConfig[].buttonId -         The ID of toggle button corresponding to y-axes data.
+     * @param {bool}      visualizerConfig[].buttonToggle -     True if toggle button exists for data, false otherwise.
+     * @param {integer}   visualizerConfig[].datasetIndex -     Index attribute set on buttonId.
+     * @param {string}    visualizerConfig[].name -             Name of data to be used as label.
+     * @param {string}    visualizerConfig[].units -            Units used for data (ie meters).
+     * @param {string}    visualizerConfig[].fill -             Determines whether this data should be represented as area or line chart.
+     * @param {integer}   defaultNumDisplayPoints -             Number of data points to display on the graph by default.
      */
     constructor(id, visualizerConfig, defaultNumDisplayPoints) 
     {
@@ -35,9 +36,17 @@ class DataVisualizer
          * @private
          * @name    DataVisualizer#numDisplayPoints
          * @type    Integer
-         * @default 25
          */
-        this.numDisplayPoints = 25;
+        this.numDisplayPoints = defaultNumDisplayPoints;
+
+        /**
+         * Default number of points to display on zoom reset.
+         * 
+         * @private
+         * @name    DataVisualizer#defaultNumDisplayPoints
+         * @type    Integer
+         */
+        this.defaultNumDisplayPoints = defaultNumDisplayPoints;
 
         /**
          * Chart object to be used by chartjs for chart manipulation>
@@ -58,6 +67,25 @@ class DataVisualizer
          */
          this.data = [];
 
+
+        /**
+         * Resets zoom to default number of data points and pans to the middle data point of the zoom.
+         * 
+         * @method  resetZoom
+         * @name    DataVisualizer#resetZoom
+         */
+        this.resetZoom = function()
+        {
+            var dataSetIndex = button.getAttribute('data-data-set-index');
+            var dataSet = this.chart.config.data.datasets[dataSetIndex];
+            var yAxis = this.chart.config.options.scales.yAxes[dataSetIndex];
+
+            // toggling data and axis visibility
+            dataSet.hidden = !dataSet.hidden;
+            yAxis.display = !yAxis.display;
+
+            this.chart.update();
+        }.bind(this)
 
 
         /**
@@ -128,7 +156,7 @@ class DataVisualizer
 
 
         /**
-         * Initializes the graph using the parameters passed in through the visualizerConfigs objects. 
+         * Initializes the graph using the parameters passed in through the visualizerConfig objects. 
          * Also initializes the data array.
          *
          * @method  initGraph
@@ -136,9 +164,9 @@ class DataVisualizer
          * 
          * @private
          * @param {Objects[]} visualizerConfig                - The configuration for y-axes data.
-         * @param {string}    visualizerConfig[].buttonID     - The ID of toggle button corresponding to y-axes data.
-         * @param {integer}   visualizerConfig[].datasetIndex - Index attribute set on buttonID.
-         * @param {integer}   visualizerConfig[].display      - Whether or not data should be displayed
+         * @param {string}    visualizerConfig[].buttonId     - The ID of toggle button corresponding to y-axes data.
+         * @param {bool}      visualizerConfig[].buttonToggle - True if toggle button exists for data, false otherwise.
+         * @param {integer}   visualizerConfig[].datasetIndex - Index attribute set on buttonId.
          * @param {string}    visualizerConfig[].name         - Name of data to be used as label.
          * @param {string}    visualizerConfig[].units        - Units used for data (ie meters).
          * @param {string}    visualizerConfig[].fill         - Determines whether this data should be represented as area or line chart.
@@ -206,21 +234,25 @@ class DataVisualizer
          * 
          * @private
          * @param {Objects[]} visualizerConfig                - The configuration for y-axes data.
-         * @param {string}    visualizerConfig[].buttonID     - The ID of toggle button corresponding to y-axes data.
-         * @param {integer}   visualizerConfig[].datasetIndex - Index attribute set on buttonID.
-         * @param {integer}   visualizerConfig[].display      - Whether or not data should be displayed
+         * @param {string}    visualizerConfig[].buttonId     - The ID of toggle button corresponding to y-axes data.
+         * @param {bool}      visualizerConfig[].buttonToggle - True if toggle button exists for data, false otherwise.
+         * @param {integer}   visualizerConfig[].datasetIndex - Index attribute set on buttonId.
          * @param {string}    visualizerConfig[].name         - Name of data to be used as label.
          * @param {string}    visualizerConfig[].units        - Units used for data (ie meters).
          * @param {string}    visualizerConfig[].fill         - Determines whether this data should be represented as area or line chart.
          */
-        function initToggleButtons(visualizerConfigs)
+        function initToggleButtons(visualizerConfig)
         {
             var button; 
 
-            for (var i = 0; i < visualizerConfigs.length; i++)
+            for (var i = 0; i < visualizerConfig.length-1; i++)
             {
-                button = document.getElementById(visualizerConfigs[i].buttonId);
-                button.setAttribute('data-data-set-index', visualizerConfigs[i].datasetIndex);
+                // if data that isn't shown on graph it won't need a toggle button setup
+                if (visualizerConfig[i].buttonToggle = true) 
+                {
+                    button = document.getElementById(visualizerConfig[i].buttonId);
+                    button.setAttribute('data-data-set-index', visualizerConfig[i].datasetIndex);
+                }
             }
         }
 
@@ -235,7 +267,6 @@ class DataVisualizer
         this.chart = new Chart(ctx, config);
         Chart.defaults.global.defaultFontColor = "#ebebeb";
         Chart.defaults.global.defaultFontFamily = "'Lato','Helvetica Neue','Helvetica','Arial',sans-serif";
-
     }
 }
 
