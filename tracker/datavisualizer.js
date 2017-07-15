@@ -2,7 +2,6 @@
 * @fileOverview Produces line chart 
 */
 
-/**  */
 class DataVisualizer 
 {
   /**
@@ -53,20 +52,6 @@ class DataVisualizer
           this.chart.update();
       }.bind(this)
 
-
-      // adding the dataset enum property to each toggle button for use in toggleData function below
-      this.initToggleButtons = function() 
-      {
-          var button; 
-
-          button = document.getElementById("toggleTemperature");
-          button.setAttribute('data-data-set-index', DataSet.TEMPERATURE);
-          
-          button = document.getElementById("toggleAltitude");
-          button.setAttribute('data-data-set-index', DataSet.ALTITUDE);
-      }.bind(this)
-
-
       this.addDataPoint = function()
       {
           actualElevationData.push(Math.floor(Math.random() * 50000));
@@ -89,6 +74,23 @@ class DataVisualizer
       }.bind(this)
 
 
+      /**
+       * Initializes toggle buttons to reference correct dataset.
+       * 
+       * @private
+       */
+      function initToggleButtons()
+      {
+          var button; 
+
+          button = document.getElementById("toggleTemperature");
+          button.setAttribute('data-data-set-index', DataSet.TEMPERATURE);
+          
+          button = document.getElementById("toggleAltitude");
+          button.setAttribute('data-data-set-index', DataSet.ALTITUDE);
+      }
+
+
       // creating and configuring chart
       var ctx = document.getElementById(id).getContext("2d");
       this.chart = new Chart(ctx, config);
@@ -97,7 +99,7 @@ class DataVisualizer
 
 
       // initializing toggle buttons
-      this.initToggleButtons();
+      initToggleButtons();
   }
 }
 
