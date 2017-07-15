@@ -13,10 +13,6 @@ class DataVisualizer
    */
   constructor(id) 
   {
-      // binding functions to "this" context
-      this.addDataPoint = this.addDataPoint.bind(this);
-      this.initToggleButtons = this.initToggleButtons.bind(this);
-
       /**
        * Number of total packets added to chart.
        *
@@ -46,6 +42,7 @@ class DataVisualizer
        */
       this.chart;
 
+      
       this.toggleData = function(button)
       {
           var dataSetIndex = button.getAttribute('data-data-set-index');
@@ -57,49 +54,51 @@ class DataVisualizer
       }.bind(this)
 
 
+      // adding the dataset enum property to each toggle button for use in toggleData function below
+      this.initToggleButtons = function() 
+      {
+          var button; 
+
+          button = document.getElementById("toggleTemperature");
+          button.setAttribute('data-data-set-index', DataSet.TEMPERATURE);
+          
+          button = document.getElementById("toggleAltitude");
+          button.setAttribute('data-data-set-index', DataSet.ALTITUDE);
+      }.bind(this)
+
+
+      this.addDataPoint = function()
+      {
+          actualElevationData.push(Math.floor(Math.random() * 50000));
+          actualTemperatureData.push(Math.floor(Math.random() * 100));
+          actualPacketIndex.push(++this.numPackets);
+          temperatureData.length = 0;
+          elevationData.length = 0;
+          packetIndex.length = 0;
+
+          var startIndex = (this.numPackets > this.numDisplayPoints) ? (this.numPackets - this.numDisplayPoints) : 0;
+          var endIndex = (this.numPackets > this.numDisplayPoints) ? (startIndex + this.numDisplayPoints) : this.numPackets;
+
+          for (var i = startIndex; i < endIndex; i++) {
+            temperatureData.push(actualTemperatureData[i]);
+            elevationData.push(actualElevationData[i]); 
+            packetIndex.push(actualPacketIndex[i]);
+          } 
+
+          this.chart.update();
+      }.bind(this)
+
+
       // creating and configuring chart
       var ctx = document.getElementById(id).getContext("2d");
       this.chart = new Chart(ctx, config);
       Chart.defaults.global.defaultFontColor = "#ebebeb";
       Chart.defaults.global.defaultFontFamily = "'Lato','Helvetica Neue','Helvetica','Arial',sans-serif";
 
+
       // initializing toggle buttons
       this.initToggleButtons();
   }
-
-  addDataPoint()
-  {
-      actualElevationData.push(Math.floor(Math.random() * 50000));
-      actualTemperatureData.push(Math.floor(Math.random() * 100));
-      actualPacketIndex.push(++this.numPackets);
-      temperatureData.length = 0;
-      elevationData.length = 0;
-      packetIndex.length = 0;
-
-      var startIndex = (this.numPackets > this.numDisplayPoints) ? (this.numPackets - this.numDisplayPoints) : 0;
-      var endIndex = (this.numPackets > this.numDisplayPoints) ? (startIndex + this.numDisplayPoints) : this.numPackets;
-
-      for (var i = startIndex; i < endIndex; i++) {
-        temperatureData.push(actualTemperatureData[i]);
-        elevationData.push(actualElevationData[i]); 
-        packetIndex.push(actualPacketIndex[i]);
-      } 
-
-      this.chart.update();
-  }
-
-  // adding the dataset enum property to each toggle button for use in toggleData function below
-  initToggleButtons() 
-  {
-      var button; 
-
-      button = document.getElementById("toggleTemperature");
-      button.setAttribute('data-data-set-index', DataSet.TEMPERATURE);
-      
-      button = document.getElementById("toggleAltitude");
-      button.setAttribute('data-data-set-index', DataSet.ALTITUDE);
-  }
-
 }
 
 
