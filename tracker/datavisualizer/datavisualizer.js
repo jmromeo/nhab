@@ -17,14 +17,14 @@ class DataVisualizer
      * @param {string}    visualizerConfig[].units -        Units used for data (ie meters).
      * @param {string}    visualizerConfig[].fill -         Determines whether this data should be represented as area or line chart.
      */
-    constructor(id, visualizerConfig) 
+    constructor(id, visualizerConfig, defaultNumDisplayPoints) 
     {
         /**
          * Number of total packets added to chart.
          *
          * @private
-         * @name DataVisualizer#numPackets
-         * @type Integer
+         * @name    DataVisualizer#numPackets
+         * @type    Integer
          * @default 0
          */
         this.numPackets = 0;
@@ -33,8 +33,8 @@ class DataVisualizer
          * Number of data points to display on line chart.
          * 
          * @private
-         * @name DataVisualizer#numDisplayPoints
-         * @type Integer
+         * @name    DataVisualizer#numDisplayPoints
+         * @type    Integer
          * @default 25
          */
         this.numDisplayPoints = 25;
@@ -43,8 +43,8 @@ class DataVisualizer
          * Chart object to be used by chartjs for chart manipulation>
          * 
          * @private
-         * @name DataVisualizer#chart
-         * @type Object
+         * @name    DataVisualizer#chart
+         * @type    Object
          */
         this.chart;
 
@@ -63,13 +63,10 @@ class DataVisualizer
         /**
          * Displays or hides the data corresponding to the selected button. Requires that initToggleButtons has been called.
          * 
-         * @param {Objects[]} visualizerConfig                - The configuration for y-axes data>
-         * @param {string}    visualizerConfig[].buttonID     - The ID of toggle button corresponding to y-axes data.
-         * @param {integer}   visualizerConfig[].datasetIndex - Index attribute set on buttonID.
-         * @param {integer}   visualizerConfig[].display      - Whether or not data should be displayed
-         * @param {string}    visualizerConfig[].name         - Name of data to be used as label.
-         * @param {string}    visualizerConfig[].units        - Units used for data (ie meters).
-         * @param {string}    visualizerConfig[].fill         - Determines whether this data should be represented as area or line chart.
+         * @method  toggleData
+         * @name    DataVisualizer#toggleData
+         *
+         * @param {Object} button - Button element corresponding to data to be toggled.
          */
         this.toggleData = function(button)
         {
@@ -88,6 +85,9 @@ class DataVisualizer
         /**
          * Adds the specified data to each dataset. There should be 1 value for 
          * each dataset in the graph.
+         *
+         * @method  addDataPoint 
+         * @name    DataVisualizer#addDataPoint
          * 
          * @param {Objects[]} data - Array with 1 value for each dataset. 
          *                           If a visible dataset, the value should be an integer.
@@ -128,11 +128,14 @@ class DataVisualizer
 
 
         /**
-         * Initializes the graph using the parameters passed in through the visualizerConfigs objects. Also
-         * initializes the data array.
+         * Initializes the graph using the parameters passed in through the visualizerConfigs objects. 
+         * Also initializes the data array.
+         *
+         * @method  initGraph
+         * @name    DataVisualizer#initGraph
          * 
          * @private
-         * @param {Objects[]} visualizerConfig                - The configuration for y-axes data>
+         * @param {Objects[]} visualizerConfig                - The configuration for y-axes data.
          * @param {string}    visualizerConfig[].buttonID     - The ID of toggle button corresponding to y-axes data.
          * @param {integer}   visualizerConfig[].datasetIndex - Index attribute set on buttonID.
          * @param {integer}   visualizerConfig[].display      - Whether or not data should be displayed
@@ -197,9 +200,12 @@ class DataVisualizer
 
         /**
          * Initializes toggle buttons to reference correct dataset.
+         *
+         * @method  initToggleButtons
+         * @name    DataVisualizer#initToggleButtons
          * 
          * @private
-         * @param {Objects[]} visualizerConfig                - The configuration for y-axes data>
+         * @param {Objects[]} visualizerConfig                - The configuration for y-axes data.
          * @param {string}    visualizerConfig[].buttonID     - The ID of toggle button corresponding to y-axes data.
          * @param {integer}   visualizerConfig[].datasetIndex - Index attribute set on buttonID.
          * @param {integer}   visualizerConfig[].display      - Whether or not data should be displayed
