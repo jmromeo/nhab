@@ -38,69 +38,7 @@ var xAxesConfig =
     }
 ];
 
-var defaultAxesConfig =
-     {
-       ticks: { 
-           callback: function(label, index, labels) {
-               if (index == 0) {
-                   return yAxesConfig[0].scaleLabel.labelString;
-                }
-                return Math.round(label);
-           }
-        },
-        id: "...",
-        position: "left",
-        display: true,
-        scaleLabel: {
-            display: false,
-            labelString: '...'
-        }
-    };
-
-var yAxesConfig = 
-[
-    // Altitude Y Axis
-    {
-       ticks: { 
-            callback: function(label, index, labels) {
-                if (index == 0) {
-                    return yAxesConfig[0].scaleLabel.labelString;
-                }
-                return Math.round(label);
-            }
-        },
-        id: "...",
-        position: "...",
-        display: false,
-        scaleLabel: {
-            display: false,
-            labelString: '...'
-        }
-    },
-
-    // Temperature Y Axis
-    {
-       ticks: { 
-            callback: function(label, index, labels) {
-
-                if (index == 0) {
-                    return yAxesConfig[1].scaleLabel.labelString;
-                }
-                return Math.round(label);
-            }
-        },
-        id: "...",
-        display: false,
-        position: "...",
-        scaleLabel: {
-            display: false,
-            labelString: '°C'
-        },
-        gridLines: {
-            drawOnChartArea: false
-        }
-    }
-];
+var yAxesConfig = [];
 
 
 /////////////////////////////////////////////////////////////////////////////// 

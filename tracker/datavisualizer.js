@@ -109,21 +109,28 @@ class DataVisualizer
               };
 
               var axesConfig = {
-
-              }
-
-              yAxesConfig[i].id = configs[i].buttonId;
-              yAxesConfig[i].display = true;
-              if ((i % 2) == 0) {
-                  yAxesConfig[i].position = "left";
-              }
-              else { 
-                  yAxesConfig[i].position = "right";
-              }
-              yAxesConfig[i].scaleLabel.display = false;
-              yAxesConfig[i].scaleLabel.labelString = configs[i].units;
+                  id: configs[i].buttonId,
+                  display: true,
+                  position: (i % 2) ? "left" : "right",
+                  scaleLabel: {
+                      display: false,
+                      labelString: configs[i].units
+                  },
+                  ticks: {
+                      callback: 
+                      (function(units) {
+                          return function(label, index, labels) {
+                              if (index == 0) {
+                                  return units;
+                              }  
+                              return Math.round(label);
+                          }
+                      })(configs[i].units)
+                  }
+              };
 
               dataSetsConfig.push(dataConfig);
+              yAxesConfig.push(axesConfig);
           }
 
           // setting up config variable for chart
