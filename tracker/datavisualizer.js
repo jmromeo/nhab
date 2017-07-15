@@ -2,12 +2,6 @@
 * @fileOverview Produces line chart 
 */
 
-// class needs to take an array of objects with the following data
-//    * button id
-//    * dataset index attached to button
-//    * y-axis label (ie altitude) and labelstring (ie meters)
-//    * fill type
-
 class DataVisualizer 
 {
   /**
@@ -64,6 +58,7 @@ class DataVisualizer
 
           this.chart.update();
       }.bind(this)
+
 
       this.addDataPoint = function()
       {
@@ -123,12 +118,6 @@ class DataVisualizer
               yAxesConfig[i].scaleLabel.labelString = configs[i].units;
 
               dataSetsConfig.push(dataConfig);
-
-//              dataSetsConfig[i].label = configs[i].name;
-//              dataSetsConfig[i].fill = configs[i].fill;
-//              dataSetsConfig[i].yAxisID = configs[i].buttonId;
-//              dataSetsConfig[i].borderColor = configs[i].color;
-//              dataSetsConfig[i].backgroundColor = Samples.utils.transparentize(configs[i].color, 0.9);
           }
 
           config.options.scales.yAxes = yAxesConfig;
