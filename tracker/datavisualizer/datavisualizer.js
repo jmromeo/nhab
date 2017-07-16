@@ -96,6 +96,15 @@ class DataVisualizer
 
         }.bind(this)
 
+        this.panZoom = function(e)
+        {
+            e.preventDefault();
+        }.bind(this);
+
+        // set scroll and touch event listeners on canvas
+        document.getElementById(id).addEventListener('wheel', this.panZoom); 
+        document.getElementById(id).addEventListener('scroll', this.panZoom); 
+        document.getElementById(id).addEventListener('touchmove', this.panZoom); 
 
         /**
          * Displays or hides the data corresponding to the selected button. Requires that initToggleButtons has been called.
