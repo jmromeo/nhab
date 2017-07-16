@@ -11,7 +11,9 @@ class DataVisualizer
      * @param {string}    id -                                  ID of canvas that chart should be rendered on.
      * @param {Objects[]} visualizerConfig -                    The configuration for y-axes data.
      * @param {string}    visualizerConfig[].buttonId -         The ID of toggle button corresponding to y-axes data.
+     * @param {Integer[]} visualizerConfig[].data -             Array with data to be displayed. Refresh chart must be called when data arrays are updated.When array is updated to display, call refresh chart.
      * @param {integer}   visualizerConfig[].datasetIndex -     Index attribute set on buttonId.
+     * @param {integer}   visualizerConfig[].color -            Color of data points.
      * @param {string}    visualizerConfig[].name -             Name of data to be used as label.
      * @param {string}    visualizerConfig[].units -            Units used for data (ie meters).
      * @param {string}    visualizerConfig[].fill -             Determines whether this data should be represented as area or line chart.
@@ -20,7 +22,7 @@ class DataVisualizer
     constructor(id, visualizerConfig, defaultNumDisplayPoints) 
     {
         /**
-         * Number of total packets added to chart.
+         * Number of total packets added to chart. Only recalculated during chart refresh.
          *
          * @private
          * @name    DataVisualizer#numPackets
@@ -28,6 +30,10 @@ class DataVisualizer
          * @default 0
          */
         this.numPackets = 0;
+
+        /**
+         * Packet index.
+         */
 
         /**
          * Number of data points to display on line chart.
@@ -46,6 +52,16 @@ class DataVisualizer
          * @type    Integer
          */
         this.defaultNumDisplayPoints = defaultNumDisplayPoints;
+
+        /**
+         * If data is zoomed or panned, we will stop drawing new incoming datapoints.
+         * 
+         * @private
+         * @name    DataVisualizer#defaultNumDisplayPoints
+         * @type    Bool
+         * @default false
+         */
+         this.zoomed = false;
 
         /**
          * Chart object to be used by chartjs for chart manipulation>
@@ -75,15 +91,9 @@ class DataVisualizer
          */
         this.resetZoom = function()
         {
-            var dataSetIndex = button.getAttribute('data-data-set-index');
-            var dataSet = this.chart.config.data.datasets[dataSetIndex];
-            var yAxis = this.chart.config.options.scales.yAxes[dataSetIndex];
+            this.zoomed = false;
+            this.numDisplayPoints = this.defaultNumDisplayPoints;
 
-            // toggling data and axis visibility
-            dataSet.hidden = !dataSet.hidden;
-            yAxis.display = !yAxis.display;
-
-            this.chart.update();
         }.bind(this)
 
 
@@ -97,7 +107,6 @@ class DataVisualizer
          */
         this.toggleData = function(button)
         {
-            console.log(button);
             var dataSetIndex = button.getAttribute('data-data-set-index');
             var dataSet = this.chart.config.data.datasets[dataSetIndex];
             var yAxis = this.chart.config.options.scales.yAxes[dataSetIndex];
@@ -107,6 +116,7 @@ class DataVisualizer
             yAxis.display = !yAxis.display;
 
             this.chart.update();
+
         }.bind(this)
 
 
@@ -122,36 +132,60 @@ class DataVisualizer
          */
         this.addDataPoint = function(data)
         {
+            var i;
             var datasets = this.chart.config.data.datasets;
-            var startIndex;
-            var endIndex;
-            var i, j;
-
-            actualPacketIndex.push(++this.numPackets);
-
-            startIndex = (this.numPackets > this.numDisplayPoints) ? (this.numPackets - this.numDisplayPoints) : 0;
-            endIndex = (this.numPackets > this.numDisplayPoints) ? (startIndex + this.numDisplayPoints) : this.numPackets;
 
             for (i = 0; i < datasets.length; i++)
             {
                 // pushing incoming data into overall data array
                 this.data[i].push(data[i]);
+            }
 
-                // pushing data from overall array to display data array
+            this.refreshChart();
+
+        }.bind(this)
+
+
+        /**
+         * Adds the specified data to each dataset. There should be 1 value for 
+         * each dataset in the graph.
+         *
+         * @method  addDataPoint 
+         * @name    DataVisualizer#addDataPoint
+         * 
+         * @param {Objects[]} data - Array with 1 value for each dataset. 
+         *                           If a visible dataset, the value should be an integer.
+         */
+        this.refreshChart = function()
+        {
+            var i, j;
+            var datasets    = this.chart.config.data.datasets;
+
+            this.numPackets = (this.zoomed == true) ? this.numPackets : this.data[0].length;
+
+            var startIndex  = (this.numPackets > this.numDisplayPoints) ? (this.numPackets - this.numDisplayPoints) : 0;
+            var endIndex    = (this.numPackets > this.numDisplayPoints) ? (startIndex + this.numDisplayPoints) : this.numPackets;
+
+            // pushing data from overall array to display data array
+            for (i = 0; i < datasets.length; i++)
+            {
                 datasets[i].data.length = 0;
+
                 for (j = startIndex; j < endIndex; j++) {
                     datasets[i].data.push(this.data[i][j]);
                 } 
             }
 
+
             packetIndex.length = 0;
-            for (i = startIndex; i < endIndex; i++) {
-                packetIndex.push(actualPacketIndex[i]);
-            } 
+            for (i = startIndex; i < endIndex; i++)
+            {
+                packetIndex.push(i);
+            }
 
             this.chart.update();
-        }.bind(this)
 
+        }.bind(this)
 
         /**
          * Initializes the graph using the parameters passed in through the visualizerConfig objects. 
@@ -164,16 +198,16 @@ class DataVisualizer
          * @param {Objects[]} visualizerConfig                - The configuration for y-axes data.
          * @param {string}    visualizerConfig[].buttonId     - The ID of toggle button corresponding to y-axes data.
          * @param {integer}   visualizerConfig[].datasetIndex - Index attribute set on buttonId.
+         * @param {integer}   visualizerConfig[].color        - Color of data points.
          * @param {string}    visualizerConfig[].name         - Name of data to be used as label.
          * @param {string}    visualizerConfig[].units        - Units used for data (ie meters).
          * @param {string}    visualizerConfig[].fill         - Determines whether this data should be represented as area or line chart.
          */
         this.initGraph = function(visualizerConfig)
         {
-            this.data = new Array(visualizerConfig.length);
-
             for (var i = 0; i < visualizerConfig.length; i++)
             {
+                this.data.push(visualizerConfig[i].data);
 
                 // Configuring the data set options
                 var dataConfig = {
@@ -211,9 +245,6 @@ class DataVisualizer
                 // push configuration to config array
                 dataSetsConfig.push(dataConfig);
                 yAxesConfig.push(axesConfig);
-
-                // initialize data array used to store data 
-                this.data[i] = new Array();
             }
 
             // setting up config variable for chart
@@ -233,9 +264,6 @@ class DataVisualizer
          * @param {Objects[]} visualizerConfig                - The configuration for y-axes data.
          * @param {string}    visualizerConfig[].buttonId     - The ID of toggle button corresponding to y-axes data.
          * @param {integer}   visualizerConfig[].datasetIndex - Index attribute set on buttonId.
-         * @param {string}    visualizerConfig[].name         - Name of data to be used as label.
-         * @param {string}    visualizerConfig[].units        - Units used for data (ie meters).
-         * @param {string}    visualizerConfig[].fill         - Determines whether this data should be represented as area or line chart.
          */
         function initToggleButtons(visualizerConfig)
         {
