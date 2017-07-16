@@ -8,7 +8,7 @@ window.onload = function() {
         {
           buttonId: "toggleTemperature",
           datasetIndex: 0,
-          color: 'rgb(153, 102, 255)',
+          color: window.getComputedStyle(document.getElementById("toggleTemperature"), null).getPropertyValue("background-color"), 
           name: "Temperature",
           units: "°C",
           fill: "false"
@@ -18,7 +18,7 @@ window.onload = function() {
         {
           buttonId: "toggleAltitude",
           datasetIndex: 1,
-          color: 'rgb(75, 192, 192)',
+          color: window.getComputedStyle(document.getElementById("toggleAltitude"), null).getPropertyValue("background-color"), 
           name: "Altitude",
           units: "Meters",
           fill: "start"
