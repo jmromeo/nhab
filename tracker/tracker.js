@@ -4,7 +4,6 @@ var chart;
 var temperatureData = [];
 var altitudeData = [];
 
-
 window.onload = function() {
     var visualizerConfig = 
     [
@@ -39,6 +38,9 @@ window.onload = function() {
         temperatureData.push(Math.round(Math.random()*100));
         altitudeData.push(Math.round(Math.random()*50000));
     }
+
+    document.getElementById("table-temperature-data").innerHTML = String(temperatureData[i-1]) + "°C";
+    document.getElementById("table-altitude-data").innerHTML = String(altitudeData[i-1]) + "m";
 
     chart.refreshChart();
 };
