@@ -3,6 +3,7 @@ var chart;
 
 var temperatureData = [];
 var altitudeData = [];
+var humidityData = [];
 
 window.onload = function() {
     var visualizerConfig = 
@@ -27,6 +28,17 @@ window.onload = function() {
           name: "Altitude",
           units: "Meters",
           fill: "start"
+        },
+
+        // humidity data
+        {
+          buttonId: "toggleHumidity",
+          data: humidityData,
+          datasetIndex: 2,
+          color: 'rgb(96, 233, 255)', 
+          name: "Humidity",
+          units: "%",
+          fill: "false"
         }
     ];
 
@@ -37,10 +49,13 @@ window.onload = function() {
 //        chart.addDataPoint([Math.round(Math.random()*100), Math.round(Math.random()*50000), Math.round(Math.random()*360)]);
         temperatureData.push(Math.round(Math.random()*100));
         altitudeData.push(Math.round(Math.random()*50000));
+        humidityData.push(Math.round(Math.random()*100));
     }
 
     document.getElementById("table-temperature-data").innerHTML = String(temperatureData[i-1]) + "°C";
     document.getElementById("table-altitude-data").innerHTML = String(altitudeData[i-1]) + "m";
+    document.getElementById("table-humidity-data").innerHTML = String(humidityData[i-1]) + "%";
+    document.getElementById("table-packetnumber-data").innerHTML = String(i-1);
 
     chart.refreshChart();
 };
