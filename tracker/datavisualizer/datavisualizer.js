@@ -174,7 +174,6 @@ class DataVisualizer
             else if (e.type == "touchstart")
             {
                 this.pan.startX = e.touches[0].clientX;         
-                console.log(e.touches[0].clientX);
             }
 
             // calculate how far to pan based on how far fingers have scrolled since last touchmove
@@ -183,10 +182,8 @@ class DataVisualizer
                 // only allow 2 finger pan
                 if (e.changedTouches.length > 0) 
                 {
-                    console.log(this.pan.startX);
                     deltaX = this.pan.startX - e.changedTouches[0].clientX;
                     this.pan.startX = e.changedTouches[0].clientX;
-                    console.log(e.changedTouches[0].clientX);
                 }
             }
 
@@ -245,7 +242,6 @@ class DataVisualizer
         this.zoomOut = function() 
         {
             this.zoomed = true;
-            console.log(this.numDisplayPoints);    
             /** @todo add zoom speed */
             this.numDisplayPoints += 2;
 
