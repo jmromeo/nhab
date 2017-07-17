@@ -52,6 +52,10 @@ window.onload = function() {
 
     chart = new DataVisualizer("linechart", visualizerConfig, 25, tooltipCallback);
 
+    var time = moment();
+    console.log(time.format('h:mm.ssa'));
+    console.log(moment);
+
     for (var i = 0; i < 1200; i++)
     {
 //        chart.addDataPoint([Math.round(Math.random()*100), Math.round(Math.random()*50000), Math.round(Math.random()*360)]);
