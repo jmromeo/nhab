@@ -264,12 +264,26 @@ class DataVisualizer
             this.zoomed = true;
             this.numDisplayPoints -= this.zoomSpeed;
 
-            this.numDisplayPoints = (this.numDisplayPoints < this.minNumDisplayPoints) ? this.minNumDisplayPoints : this.numDisplayPoints;
+            // don't update graph if we're already displaying minimum number of points
+            if (this.numDisplayPoints < this.minNumDisplayPoints)
+            {
+                this.numDisplayPoints = this.minNumDisplayPoints;
+            }
+            else 
+            {
+                this.startIndex += this.zoomSpeed / 2;
 
-            this.startIndex += this.zoomSpeed / 2;
-            this.endIndex = this.startIndex + this.numDisplayPoints - this.zoomSpeed;
-
-            this.refreshChart();
+                // if zooming would zoom off end of graph only zoom in left
+                if ((this.startIndex + this.numDisplayPoints) < this.numPackets)
+                {
+                    this.endIndex = this.startIndex + this.numDisplayPoints - this.zoomSpeed;
+                }
+                else
+                {
+                    this.endIndex = this.numPackets;
+                }
+                this.refreshChart();
+            }
 
         }.bind(this)
 
@@ -288,21 +302,28 @@ class DataVisualizer
             // zooming out by adding more data points to the graph. Only allowing
             // a certain number of data points or else the graph gets too messy.
             this.numDisplayPoints += this.zoomSpeed;
-            this.numDisplayPoints = (this.numDisplayPoints > this.maxNumDisplayPoints) ? this.maxNumDisplayPoints : this.numDisplayPoints;
 
-            // calculating the start and end indexes of data to be drawn. if we 
-            // would draw off the end of the graph, then only zoom out left instead.
-            this.startIndex -= this.zoomSpeed / 2;
-            if ((this.startIndex + this.numDisplayPoints) < this.numPackets)
+            // don't update graph if we're already displaying the maximum number of points
+            if (this.numDisplayPoints > this.maxNumDisplayPoints)
             {
-              this.endIndex = this.startIndex + this.numDisplayPoints - this.zoomSpeed;
+                this.numDisplayPoints = this.maxNumDisplayPoints; 
             }
+            else 
+            {
+                // calculating the start and end indexes of data to be drawn. if we 
+                // would draw off the end of the graph, then only zoom out left instead.
+                this.startIndex -= this.zoomSpeed / 2;
+                if ((this.startIndex + this.numDisplayPoints) < this.numPackets)
+                {
+                  this.endIndex = this.startIndex + this.numDisplayPoints - this.zoomSpeed;
+                }
 
-            if (this.startIndex < 0) {
-              this.startIndex = 0;
+                if (this.startIndex < 0) {
+                  this.startIndex = 0;
+                }
+
+                this.refreshChart();
             }
-
-            this.refreshChart();
 
         }.bind(this)
 
