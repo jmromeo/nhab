@@ -1,8 +1,5 @@
 /**
 * @fileOverview Produces line chart 
-* @todo ADD startIndex and endIndex to constructor with proper comments
-* @todo add comments to panzoom
-* @todo add comment for pan speed
 * @todo test what happens if i have less data than numdisplaypoints 
 */
 
@@ -151,7 +148,9 @@ class DataVisualizer
         {
             // used for calculating how far we should pan 
             var deltaX = 0;
-            this.pan.startX = 0;
+
+            // "static" variable used to hold previous touch position
+            this.pan.startX;
 
             this.panned = true;
 
@@ -159,16 +158,19 @@ class DataVisualizer
             if (e.type == "touchstart")
             {
                 this.pan.startX = e.touches[0].clientX;         
+                console.log(e.touches[0].clientX);
             }
 
             // calculate how far to pan based on how far fingers have scrolled since last touchmove
             else if (e.type == "touchmove")
             {
                 // only allow 2 finger pan
-                if (e.changedTouches.length > 1) 
+                if (e.changedTouches.length > 0) 
                 {
-                    deltaX = startX - e.changedTouches[0].clientX;
+                    console.log(this.pan.startX);
+                    deltaX = this.pan.startX - e.changedTouches[0].clientX;
                     this.pan.startX = e.changedTouches[0].clientX;
+                    console.log(e.changedTouches[0].clientX);
                 }
             }
 
@@ -207,6 +209,12 @@ class DataVisualizer
 
         }.bind(this);
 
+        this.zoom = function(e) 
+        {
+            console.log(e);
+
+        }.bind(this)
+
         // set scroll and touch event listeners on canvas to add pan and zoom capabilities
         document.getElementById(id).addEventListener('wheel', this.pan); 
         document.getElementById(id).addEventListener('scroll', this.pan); 
@@ -228,7 +236,6 @@ class DataVisualizer
             var yAxis = this.chart.config.options.scales.yAxes[dataSetIndex];
 
             button.classList.remove("altitude-color");
-            console.log(button);
 
             // toggling data and axis visibility
             dataSet.hidden = !dataSet.hidden;
@@ -408,8 +415,6 @@ class DataVisualizer
         this.chart = new Chart(ctx, config);
         Chart.defaults.global.defaultFontColor = "#ebebeb";
         Chart.defaults.global.defaultFontFamily = "'Lato','Helvetica Neue','Helvetica','Arial',sans-serif";
-
-        console.log(this.chart)
     }
 }
 
