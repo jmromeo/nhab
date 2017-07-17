@@ -33,7 +33,7 @@ window.onload = function() {
 
     chart = new DataVisualizer("linechart", visualizerConfig, 25);
 
-    for (var i = 0; i < 40; i++)
+    for (var i = 0; i < 10000; i++)
     {
 //        chart.addDataPoint([Math.round(Math.random()*100), Math.round(Math.random()*50000), Math.round(Math.random()*360)]);
         temperatureData.push(Math.round(Math.random()*100));

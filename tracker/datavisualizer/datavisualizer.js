@@ -1,5 +1,9 @@
 /**
 * @fileOverview Produces line chart 
+* @todo ADD startIndex and endIndex to constructor with proper comments
+* @todo add comments to panzoom
+* @todo add pan/zoom speed to configuration
+* @todo add pan feature for touchmove event
 */
 
 class DataVisualizer 
@@ -62,6 +66,7 @@ class DataVisualizer
          * @default false
          */
          this.zoomed = false;
+         this.startIndex = 0;
 
         /**
          * Chart object to be used by chartjs for chart manipulation>
@@ -93,18 +98,38 @@ class DataVisualizer
         {
             this.zoomed = false;
             this.numDisplayPoints = this.defaultNumDisplayPoints;
+            this.startIndex = Math.round((this.startIndex + this.endIndex) / 2);
+
+            this.refreshChart();
 
         }.bind(this)
 
         this.panZoom = function(e)
         {
+            console.log(e.deltaX);
+            this.zoomed = true;
+
+            this.startIndex += e.deltaX / 5;
+
+            if (this.startIndex < 0) { 
+                this.startIndex = 0; 
+            }
+            if ((this.startIndex + this.numDisplayPoints) > this.numPackets) {
+                this.startIndex = this.numPackets - this.numDisplayPoints;
+            }
+
+            this.startIndex = Math.round(this.startIndex);
+            this.endIndex = Math.round(this.startIndex + this.numDisplayPoints);
+
+            this.refreshChart();
+
             e.preventDefault();
         }.bind(this);
 
         // set scroll and touch event listeners on canvas
         document.getElementById(id).addEventListener('wheel', this.panZoom); 
         document.getElementById(id).addEventListener('scroll', this.panZoom); 
-        document.getElementById(id).addEventListener('touchmove', this.panZoom); 
+//        document.getElementById(id).addEventListener('touchmove', this.panZoom); 
 
         /**
          * Displays or hides the data corresponding to the selected button. Requires that initToggleButtons has been called.
@@ -175,22 +200,24 @@ class DataVisualizer
 
             this.numPackets = (this.zoomed == true) ? this.numPackets : this.data[0].length;
 
-            var startIndex  = (this.numPackets > this.numDisplayPoints) ? (this.numPackets - this.numDisplayPoints) : 0;
-            var endIndex    = (this.numPackets > this.numDisplayPoints) ? (startIndex + this.numDisplayPoints) : this.numPackets;
+            if (!this.zoomed) {
+                this.startIndex  = (this.numPackets > this.numDisplayPoints) ? (this.numPackets - this.numDisplayPoints) : 0;
+                this.endIndex    = (this.numPackets > this.numDisplayPoints) ? (this.startIndex + this.numDisplayPoints) : this.numPackets;
+            }
 
             // pushing data from overall array to display data array
             for (i = 0; i < datasets.length; i++)
             {
                 datasets[i].data.length = 0;
 
-                for (j = startIndex; j < endIndex; j++) {
+                for (j = this.startIndex; j < this.endIndex; j++) {
                     datasets[i].data.push(this.data[i][j]);
                 } 
             }
 
 
             packetIndex.length = 0;
-            for (i = startIndex; i < endIndex; i++)
+            for (i = this.startIndex; i < this.endIndex; i++)
             {
                 packetIndex.push(i);
             }
