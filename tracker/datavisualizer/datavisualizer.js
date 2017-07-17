@@ -52,6 +52,24 @@ class DataVisualizer
         this.defaultNumDisplayPoints = defaultNumDisplayPoints;
 
         /**
+         * Minimum number of points to display on graph.
+         * 
+         * @private
+         * @name    DataVisualizer#minNumDisplayPoints
+         * @type    Integer
+         */
+        this.minNumDisplayPoints = 5;
+
+        /**
+         * Maximum number of points to display on graph.
+         * 
+         * @private
+         * @name    DataVisualizer#maxNumDisplayPoints
+         * @type    Integer
+         */
+        this.maxNumDisplayPoints = 100;
+
+        /**
          * If data is zoomed or panned, we will stop drawing new incoming datapoints.
          * 
          * @private
@@ -244,11 +262,9 @@ class DataVisualizer
         this.zoomIn = function() 
         {
             this.zoomed = true;
-            /** @todo add zoom speed */
             this.numDisplayPoints -= this.zoomSpeed;
 
-            /** @todo add min number/max number display points */
-            this.numDisplayPoints = (this.numDisplayPoints < 5) ? 5 : this.numDisplayPoints;
+            this.numDisplayPoints = (this.numDisplayPoints < this.minNumDisplayPoints) ? this.minNumDisplayPoints : this.numDisplayPoints;
 
             this.startIndex += this.zoomSpeed / 2;
             this.endIndex = this.startIndex + this.numDisplayPoints - this.zoomSpeed;
@@ -268,14 +284,23 @@ class DataVisualizer
         this.zoomOut = function() 
         {
             this.zoomed = true;
-            /** @todo add zoom speed */
+
+            // zooming out by adding more data points to the graph. Only allowing
+            // a certain number of data points or else the graph gets too messy.
             this.numDisplayPoints += this.zoomSpeed;
+            this.numDisplayPoints = (this.numDisplayPoints > this.maxNumDisplayPoints) ? this.maxNumDisplayPoints : this.numDisplayPoints;
 
-            /** @todo add min number/max number display points */
-            this.numDisplayPoints = (this.numDisplayPoints > 100) ? 100 : this.numDisplayPoints;
-
+            // calculating the start and end indexes of data to be drawn. if we 
+            // would draw off the end of the graph, then only zoom out left instead.
             this.startIndex -= this.zoomSpeed / 2;
-            this.endIndex = this.startIndex + this.numDisplayPoints - this.zoomSpeed;
+            if ((this.startIndex + this.numDisplayPoints) < this.numPackets)
+            {
+              this.endIndex = this.startIndex + this.numDisplayPoints - this.zoomSpeed;
+            }
+
+            if (this.startIndex < 0) {
+              this.startIndex = 0;
+            }
 
             this.refreshChart();
 
@@ -293,7 +318,6 @@ class DataVisualizer
          * @param {string} e.deltaY - Amount mousewheel has moved in the vertical direction.
         */
         this.zoom = function(e) {
-          console.log(e.deltaY);
           if (e.deltaY < 0) {
             this.zoomIn(); 
           }
