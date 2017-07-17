@@ -11,12 +11,17 @@
     <script src="datavisualizer/datavisualizer.js"></script>
     <script src="tracker.js"></script>
 
-    <!-- Bootstrap -->
+    <!-- bootstrap -->
     <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
     <script type="text/javascript" src="bootstrap/js/jquery-3.1.1.min.js"></script>
     <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
 
-    <!-- My styling -->
+    <!-- glyphicons -->
+    <link rel="stylesheet" type="text/css" href="node_modules/font-awesome/css/font-awesome.min.css"></script>
+    <link rel="stylesheet" type="text/css" href="css/foundation-icons/foundation-icons.css"></script>
+
+    <!-- my styling -->
     <link rel="stylesheet" type="text/css" href="css/tracker.css">
 
     <meta charset="UTF-8">
@@ -54,20 +59,43 @@
         </div>
     </div>
 
-    <!-- Line Chart Toggle Buttons -->
+    <!-- Line Chart Control Buttons -->
     <div class="container">
+
+        <!-- Zoom Buttons -->
+        <div class="row">
+            <div class="col-md-1 col-sm-1 col-btn">
+                <button class="btn btn-default btn-sm btn-block" onclick="chart.resetZoom(this)">
+                    <span class="glyphicon glyphicon-refresh"></span>
+                </button>
+            </div>
+            <div class="col-md-1 col-sm-1 col-btn">
+                <button class="btn btn-default btn-sm btn-block btn-zoom" onclick="chart.resetZoom(this)">
+                    <span class="glyphicon glyphicon-zoom-in"></span>
+                </button>
+            </div>
+            <div class="col-md-1 col-sm-1 col-btn">
+                <button class="btn btn-default btn-sm btn-block btn-zoom" onclick="chart.resetZoom(this)">
+                    <span class="glyphicon glyphicon-zoom-out"></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Toggle Buttons -->
         <div class="row chart-toggle-buttons">
-            <div class="col-md-4 col-sm-4">
-                <button class="btn btn-default btn-lg btn-block" onclick="chart.resetZoom(this)">Reset Zoom</button>
+            <div class="col-md-3 col-sm-3 col-btn">
+                <button class="btn btn-default btn-lg btn-block" id="toggleTemperature" onclick="chart.toggleData(this)">
+                    <i class="fa fa-thermometer-2"></i> Temperature
+                </button>
             </div>
-            <div class="col-md-4 col-sm-4">
-                <button class="btn btn-default btn-lg btn-block" id="toggleTemperature" onclick="chart.toggleData(this)">Temperature</button>
-            </div>
-            <div class="col-md-4 col-sm-4">
-                <button class="btn btn-default btn-lg btn-block" id="toggleAltitude" onclick="chart.toggleData(this)">Altitude</button>
+            <div class="col-md-3 col-sm-3 col-btn">
+                <button class="btn btn-default btn-lg btn-block" id="toggleAltitude" onclick="chart.toggleData(this)">
+                    <i class="fi-mountains"></i> Altitude
+                </button>
             </div>
         </div>
     </div>
+
 </body>
 
 </html>
