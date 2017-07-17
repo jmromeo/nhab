@@ -144,8 +144,12 @@ class DataVisualizer
          * 
          * @method  pan
          * @name    DataVisualizer#pan
+         *
+         * @param {event} e -               Scroll or touch event. If null then it was from an 
+         *.                                 on click action. Use panDirection value below if null.
+         * @param {string} panDirection -   "left" if pan left, "right" if pan right  
          */
-        this.pan = function(e)
+        this.pan = function(e, panDirection)
         {
             // used for calculating how far we should pan 
             var deltaX = 0;
@@ -155,8 +159,19 @@ class DataVisualizer
 
             this.panned = true;
 
+            if (e == null) 
+            {
+                if (panDirection == "right")
+                {
+                    deltaX += (this.numDisplayPoints / 2) * this.panSpeed;
+                }
+                else
+                {
+                    deltaX -= (this.numDisplayPoints / 2) * this.panSpeed;
+                }
+            }
             // in case of start of touch we shouldn't move at all, just need to grab touch position
-            if (e.type == "touchstart")
+            else if (e.type == "touchstart")
             {
                 this.pan.startX = e.touches[0].clientX;         
                 console.log(e.touches[0].clientX);
@@ -205,7 +220,9 @@ class DataVisualizer
             this.refreshChart();
 
             // preventing a page scroll
-            e.preventDefault();
+            if (e != null) {
+                e.preventDefault();
+            }
 
         }.bind(this);
 

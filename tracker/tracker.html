@@ -62,7 +62,7 @@
     <!-- Line Chart Control Buttons -->
     <div class="container">
 
-        <!-- Zoom Buttons -->
+        <!-- Zoom and Pan Buttons -->
         <div class="row">
             <div class="col-md-1 col-sm-1 col-btn">
                 <button class="btn btn-default btn-sm btn-block" onclick="chart.resetZoom(this)">
@@ -77,6 +77,16 @@
             <div class="col-md-1 col-sm-1 col-btn">
                 <button class="btn btn-default btn-sm btn-block" onclick="chart.zoomOut(this)">
                     <span class="glyphicon glyphicon-zoom-out"></span>
+                </button>
+            </div>
+            <div class="col-md-1 col-sm-1 col-btn">
+                <button class="btn btn-default btn-sm btn-block" onclick="chart.pan(null, 'left')">
+                    <span class="glyphicon glyphicon-arrow-left"></span>
+                </button>
+            </div>
+            <div class="col-md-1 col-sm-1 col-btn">
+                <button class="btn btn-default btn-sm btn-block" onclick="chart.pan(null, 'right')">
+                    <span class="glyphicon glyphicon-arrow-right"></span>
                 </button>
             </div>
         </div>
