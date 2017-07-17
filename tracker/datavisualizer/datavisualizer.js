@@ -3,7 +3,6 @@
 * @todo ADD startIndex and endIndex to constructor with proper comments
 * @todo add comments to panzoom
 * @todo add pan/zoom speed to configuration
-* @todo add pan feature for touchmove event
 */
 
 class DataVisualizer 
@@ -104,13 +103,50 @@ class DataVisualizer
 
         }.bind(this)
 
-        this.panZoom = function(e)
+
+        // "static" variables used for pan and zoom functions
+        var startX;
+        this.pan = function(e)
         {
-            console.log(e.deltaX);
+            var deltaX;
+
             this.zoomed = true;
 
-            this.startIndex += e.deltaX / 5;
+            // Calculating the delta for mobile. Requires a bit more work since we need to keep track of when the 
+            // touch starts and ends. Also keeping track of length of time the touch took to give a nice "accelerated"
+            // pan effect
+            if (e.type == "touchstart")
+            {
+                startX = e.touches[0].clientX;         
+                deltaX = 0;
+            }
+            else if (e.type == "touchmove")
+            {
+                // only allow 2 finger pan
+                if (e.changedTouches.length > 1) {
+                    deltaX = startX - e.changedTouches[0].clientX;
+                    startX = e.changedTouches[0].clientX;
+                }
+                else 
+                {
+                    deltaX = 0; 
+                }
+            }
+            else 
+            {
+                // for light scrolling I would like to move at least a little bit
+                if (e.deltaX < 0)
+                {
+                    deltaX = e.deltaX - 5;         
+                }
+                else
+                {
+                    deltaX = e.deltaX + 5;
+                }
+            }
 
+            /** @todo update 5 to be a pan speed variable */
+            this.startIndex += (deltaX / 5);
             if (this.startIndex < 0) { 
                 this.startIndex = 0; 
             }
@@ -127,9 +163,10 @@ class DataVisualizer
         }.bind(this);
 
         // set scroll and touch event listeners on canvas
-        document.getElementById(id).addEventListener('wheel', this.panZoom); 
-        document.getElementById(id).addEventListener('scroll', this.panZoom); 
-//        document.getElementById(id).addEventListener('touchmove', this.panZoom); 
+        document.getElementById(id).addEventListener('wheel', this.pan); 
+        document.getElementById(id).addEventListener('scroll', this.pan); 
+        document.getElementById(id).addEventListener('touchstart', this.pan);
+        document.getElementById(id).addEventListener('touchmove', this.pan); 
 
         /**
          * Displays or hides the data corresponding to the selected button. Requires that initToggleButtons has been called.
@@ -326,6 +363,8 @@ class DataVisualizer
         this.chart = new Chart(ctx, config);
         Chart.defaults.global.defaultFontColor = "#ebebeb";
         Chart.defaults.global.defaultFontFamily = "'Lato','Helvetica Neue','Helvetica','Arial',sans-serif";
+
+        console.log(this.chart)
     }
 }
 
