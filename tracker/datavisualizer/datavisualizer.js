@@ -2,7 +2,8 @@
 * @fileOverview Produces line chart 
 * @todo ADD startIndex and endIndex to constructor with proper comments
 * @todo add comments to panzoom
-* @todo add pan/zoom speed to configuration
+* @todo add comment for pan speed
+* @todo test what happens if i have less data than numdisplaypoints 
 */
 
 class DataVisualizer 
@@ -35,10 +36,6 @@ class DataVisualizer
         this.numPackets = 0;
 
         /**
-         * Packet index.
-         */
-
-        /**
          * Number of data points to display on line chart.
          * 
          * @private
@@ -60,12 +57,50 @@ class DataVisualizer
          * If data is zoomed or panned, we will stop drawing new incoming datapoints.
          * 
          * @private
-         * @name    DataVisualizer#defaultNumDisplayPoints
+         * @name    DataVisualizer#zoomed
          * @type    Bool
          * @default false
          */
          this.zoomed = false;
+
+        /**
+         * If data is zoomed or panned, we will stop drawing new incoming datapoints.
+         * 
+         * @private
+         * @name    DataVisualizer#panned
+         * @type    Bool
+         * @default false
+         */
+         this.panned = false;
+
+        /**
+         * The higher the number the slower the pan speed. Note it only changes 
+         * the speed of a flick scroll.
+         * 
+         * @private
+         * @name    DataVisualizer#panSpeed
+         * @type    Integer
+         * @default 10
+         */
+         this.panSpeed = 10;
+
+        /**
+         * Index of first datapoint to be drawn.
+         * 
+         * @private
+         * @name    DataVisualizer#startIndex
+         * @type    Integer
+         */
          this.startIndex = 0;
+
+        /**
+         * Index of last datapoint to be drawn.
+         * 
+         * @private
+         * @name    DataVisualizer#startIndex
+         * @type    Integer
+         */
+         this.endIndex = 0;
 
         /**
          * Chart object to be used by chartjs for chart manipulation>
@@ -88,7 +123,8 @@ class DataVisualizer
 
 
         /**
-         * Resets zoom to default number of data points and pans to the middle data point of the zoom.
+         * Resets zoom to default number of data points  and pans to the end 
+         * of the graph.
          * 
          * @method  resetZoom
          * @name    DataVisualizer#resetZoom
@@ -96,57 +132,62 @@ class DataVisualizer
         this.resetZoom = function()
         {
             this.zoomed = false;
+            this.panned = false;
             this.numDisplayPoints = this.defaultNumDisplayPoints;
-            this.startIndex = Math.round((this.startIndex + this.endIndex) / 2);
+            this.startIndex = this.numPackets - this.numDisplayPoints;
 
             this.refreshChart();
 
         }.bind(this)
 
 
-        // "static" variables used for pan and zoom functions
-        var startX;
+        /**
+         * Touch and scroll event handler used to pan the graph.
+         * 
+         * @method  pan
+         * @name    DataVisualizer#pan
+         */
         this.pan = function(e)
         {
-            var deltaX;
+            // used for calculating how far we should pan 
+            var deltaX = 0;
+            this.pan.startX = 0;
 
-            this.zoomed = true;
+            this.panned = true;
 
-            // Calculating the delta for mobile. Requires a bit more work since we need to keep track of when the 
-            // touch starts and ends. Also keeping track of length of time the touch took to give a nice "accelerated"
-            // pan effect
+            // in case of start of touch we shouldn't move at all, just need to grab touch position
             if (e.type == "touchstart")
             {
-                startX = e.touches[0].clientX;         
-                deltaX = 0;
+                this.pan.startX = e.touches[0].clientX;         
             }
+
+            // calculate how far to pan based on how far fingers have scrolled since last touchmove
             else if (e.type == "touchmove")
             {
                 // only allow 2 finger pan
-                if (e.changedTouches.length > 1) {
+                if (e.changedTouches.length > 1) 
+                {
                     deltaX = startX - e.changedTouches[0].clientX;
-                    startX = e.changedTouches[0].clientX;
-                }
-                else 
-                {
-                    deltaX = 0; 
-                }
-            }
-            else 
-            {
-                // for light scrolling I would like to move at least a little bit
-                if (e.deltaX < 0)
-                {
-                    deltaX = e.deltaX - 5;         
-                }
-                else
-                {
-                    deltaX = e.deltaX + 5;
+                    this.pan.startX = e.changedTouches[0].clientX;
                 }
             }
 
-            /** @todo update 5 to be a pan speed variable */
-            this.startIndex += (deltaX / 5);
+            // for wheel and scroll events
+            else 
+            {
+                // to fix issue where no scroll happens at all due to rounding of decimal values < |1|
+                if (e.deltaX < 0)
+                {
+                    deltaX = e.deltaX - this.panSpeed;         
+                }
+                else
+                {
+                    deltaX = e.deltaX + this.panSpeed;
+                }
+            }
+
+
+            this.startIndex += (deltaX / this.panSpeed);
             if (this.startIndex < 0) { 
                 this.startIndex = 0; 
             }
@@ -154,15 +195,19 @@ class DataVisualizer
                 this.startIndex = this.numPackets - this.numDisplayPoints;
             }
 
+            // rounding both indexes as they will be used to index into arrays and need to be integers
             this.startIndex = Math.round(this.startIndex);
             this.endIndex = Math.round(this.startIndex + this.numDisplayPoints);
 
+            // redrawing chart
             this.refreshChart();
 
+            // preventing a page scroll
             e.preventDefault();
+
         }.bind(this);
 
-        // set scroll and touch event listeners on canvas
+        // set scroll and touch event listeners on canvas to add pan and zoom capabilities
         document.getElementById(id).addEventListener('wheel', this.pan); 
         document.getElementById(id).addEventListener('scroll', this.pan); 
         document.getElementById(id).addEventListener('touchstart', this.pan);
@@ -237,7 +282,7 @@ class DataVisualizer
 
             this.numPackets = (this.zoomed == true) ? this.numPackets : this.data[0].length;
 
-            if (!this.zoomed) {
+            if (!this.zoomed && !this.panned) {
                 this.startIndex  = (this.numPackets > this.numDisplayPoints) ? (this.numPackets - this.numDisplayPoints) : 0;
                 this.endIndex    = (this.numPackets > this.numDisplayPoints) ? (this.startIndex + this.numDisplayPoints) : this.numPackets;
             }
