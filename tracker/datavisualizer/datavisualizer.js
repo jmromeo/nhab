@@ -1,7 +1,7 @@
 /**
 * @fileOverview Produces line chart 
 * @todo fix zoom when reached min or max zoom
-* @todo add zoom speed 
+* @todo add minimum number and maximum number of display points..used in zoom
 */
 
 class DataVisualizer 
@@ -81,6 +81,16 @@ class DataVisualizer
          * @default 10
          */
          this.panSpeed = 10;
+
+        /**
+         * The higher the number the faster zoom buttons and wheel zoom will occur.
+         * 
+         * @private
+         * @name    DataVisualizer#zoomSpeed
+         * @type    Integer
+         * @default 2
+         */
+         this.zoomSpeed = 2;
 
         /**
          * Index of first datapoint to be drawn.
@@ -223,40 +233,80 @@ class DataVisualizer
 
         }.bind(this);
 
+        
+        /**
+         * Zooms in on graph. Can be attached to the onClick method of a zoom in
+         * button to perform a zoom on the graph for each click.
+         * 
+         * @method  zoomIn
+         * @name    DataVisualizer#zoomIn
+         */
         this.zoomIn = function() 
         {
             this.zoomed = true;
             /** @todo add zoom speed */
-            this.numDisplayPoints -= 2;
+            this.numDisplayPoints -= this.zoomSpeed;
 
             /** @todo add min number/max number display points */
             this.numDisplayPoints = (this.numDisplayPoints < 5) ? 5 : this.numDisplayPoints;
 
-            this.startIndex += 1;
-            this.endIndex = this.startIndex + this.numDisplayPoints - 2;
+            this.startIndex += this.zoomSpeed / 2;
+            this.endIndex = this.startIndex + this.numDisplayPoints - this.zoomSpeed;
 
             this.refreshChart();
 
         }.bind(this)
 
+
+        /**
+         * Zooms out of graph. Can be attached to the onClick method of a zoom out
+         * button to perform a zoom on the graph for each click.
+         * 
+         * @method  zoomOut
+         * @name    DataVisualizer#zoomOut
+         */
         this.zoomOut = function() 
         {
             this.zoomed = true;
             /** @todo add zoom speed */
-            this.numDisplayPoints += 2;
+            this.numDisplayPoints += this.zoomSpeed;
 
             /** @todo add min number/max number display points */
             this.numDisplayPoints = (this.numDisplayPoints > 100) ? 100 : this.numDisplayPoints;
 
-            this.startIndex -= 1;
-            this.endIndex = this.startIndex + this.numDisplayPoints - 1;
+            this.startIndex -= this.zoomSpeed / 2;
+            this.endIndex = this.startIndex + this.numDisplayPoints - this.zoomSpeed;
 
             this.refreshChart();
 
         }.bind(this)
 
+
+        /**
+         * Event handler for mousewheel event that will allow zoom on mousewheel. 
+         *
+         * @private
+         * @method  zoom
+         * @name    DataVisualizer#zoom
+         * 
+         * @param {Object} e -        Mousewheel event.
+         * @param {string} e.deltaY - Amount mousewheel has moved in the vertical direction.
+        */
+        this.zoom = function(e) {
+          console.log(e.deltaY);
+          if (e.deltaY < 0) {
+            this.zoomIn(); 
+          }
+          else {
+            this.zoomOut();
+          }
+
+          e.preventDefault();
+        }.bind(this)
+
+
         // set scroll and touch event listeners on canvas to add pan and zoom capabilities
-        document.getElementById(id).addEventListener('wheel', this.pan); 
+        document.getElementById(id).addEventListener('wheel', this.zoom); 
         document.getElementById(id).addEventListener('scroll', this.pan); 
         document.getElementById(id).addEventListener('touchstart', this.pan);
         document.getElementById(id).addEventListener('touchmove', this.pan); 
