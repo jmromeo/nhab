@@ -25,6 +25,6 @@
   "homepage": "https://github.com/jmromeo/nhab#readme",
   "dependencies": {
     "chart.js": "^2.6.0",
-    "express": "^4.15.3",
+    "express": "^4.15.3"
   }
 }
