@@ -1,6 +1,7 @@
 /**
 * @fileOverview Produces line chart 
-* @todo test what happens if i have less data than numdisplaypoints 
+* @todo fix zoom when reached min or max zoom
+* @todo add zoom speed 
 */
 
 class DataVisualizer 
@@ -188,7 +189,6 @@ class DataVisualizer
                 }
             }
 
-
             this.startIndex += (deltaX / this.panSpeed);
             if (this.startIndex < 0) { 
                 this.startIndex = 0; 
@@ -209,9 +209,36 @@ class DataVisualizer
 
         }.bind(this);
 
-        this.zoom = function(e) 
+        this.zoomIn = function() 
         {
-            console.log(e);
+            this.zoomed = true;
+            /** @todo add zoom speed */
+            this.numDisplayPoints -= 2;
+
+            /** @todo add min number/max number display points */
+            this.numDisplayPoints = (this.numDisplayPoints < 5) ? 5 : this.numDisplayPoints;
+
+            this.startIndex += 1;
+            this.endIndex = this.startIndex + this.numDisplayPoints - 2;
+
+            this.refreshChart();
+
+        }.bind(this)
+
+        this.zoomOut = function() 
+        {
+            this.zoomed = true;
+            console.log(this.numDisplayPoints);    
+            /** @todo add zoom speed */
+            this.numDisplayPoints += 2;
+
+            /** @todo add min number/max number display points */
+            this.numDisplayPoints = (this.numDisplayPoints > 100) ? 100 : this.numDisplayPoints;
+
+            this.startIndex -= 1;
+            this.endIndex = this.startIndex + this.numDisplayPoints - 1;
+
+            this.refreshChart();
 
         }.bind(this)
 
