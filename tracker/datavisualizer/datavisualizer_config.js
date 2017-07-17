@@ -45,7 +45,8 @@ var config = {
     type: 'line',
     data: {
         labels: packetIndex,
-        datasets: dataSetsConfig
+        datasets: dataSetsConfig,
+        tooltipEvents: ["click"]
     },
     options: {
         responsive: true,
