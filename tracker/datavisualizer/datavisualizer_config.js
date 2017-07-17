@@ -52,7 +52,10 @@ var config = {
         responsive: true,
         tooltips: {
             mode: 'index',
-            intersect: true
+            intersect: true,
+            callbacks: {
+                beforeTitle: undefined
+            }
         },
         hover: {
             mode: 'nearest',

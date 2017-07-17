@@ -3,6 +3,7 @@
 
 <head>
     <title>High Altitude Balloon Tracker</title>
+    <meta charset="UTF-8">
 
     <!-- javascript used for generating the line chart -->
     <script src="node_modules/chart.js/dist/Chart.bundle.js"></script>
@@ -24,7 +25,6 @@
     <!-- my styling -->
     <link rel="stylesheet" type="text/css" href="css/tracker.css">
 
-    <meta charset="UTF-8">
 
     <style>
       canvas{
@@ -108,7 +108,7 @@
         <!-- Zoom and Pan Buttons -->
         <div class="row">
             <div class="col-md-1 col-sm-1 col-btn">
-                <button class="btn btn-default btn-md btn-block" onclick="chart.resetZoom(this)">
+                <button class="btn btn-default btn-md btn-block" onclick="chart.reset(this)">
                     <span class="glyphicon glyphicon-refresh"></span>
                 </button>
             </div>

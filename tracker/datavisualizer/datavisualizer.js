@@ -10,16 +10,17 @@ class DataVisualizer
      * @class DataVisualizer
      * @classdesc DataVisualizer is a wrapper class for line-chart in chart.js.
      *
-     * @param {string}    id -                                  ID of canvas that chart should be rendered on.
-     * @param {Objects[]} visualizerConfig -                    The configuration for y-axes data.
-     * @param {string}    visualizerConfig[].buttonId -         The ID of toggle button corresponding to y-axes data.
-     * @param {Integer[]} visualizerConfig[].data -             Array with data to be displayed. Refresh chart must be called when data arrays are updated.When array is updated to display, call refresh chart.
-     * @param {integer}   visualizerConfig[].datasetIndex -     Index attribute set on buttonId.
-     * @param {integer}   visualizerConfig[].color -            Color of data points.
-     * @param {string}    visualizerConfig[].name -             Name of data to be used as label.
-     * @param {string}    visualizerConfig[].units -            Units used for data (ie meters).
-     * @param {string}    visualizerConfig[].fill -             Determines whether this data should be represented as area or line chart.
-     * @param {integer}   defaultNumDisplayPoints -             Number of data points to display on the graph by default.
+     * @param {string}    id -                              ID of canvas that chart should be rendered on.
+     * @param {Objects[]} visualizerConfig -                The configuration for y-axes data.
+     * @param {string}    visualizerConfig[].buttonId -     The ID of toggle button corresponding to y-axes data.
+     * @param {Integer[]} visualizerConfig[].data -         Array with data to be displayed. Refresh chart must be called when data arrays are updated.When array is updated to display, call refresh chart.
+     * @param {integer}   visualizerConfig[].datasetIndex - Index attribute set on buttonId.
+     * @param {integer}   visualizerConfig[].color -        Color of data points.
+     * @param {string}    visualizerConfig[].name -         Name of data to be used as label.
+     * @param {string}    visualizerConfig[].units -        Units used for data (ie meters).
+     * @param {string}    visualizerConfig[].fill -         Determines whether this data should be represented as area or line chart.
+     * @param {integer}   defaultNumDisplayPoints -         Number of data points to display on the graph by default.
+     * @param {function}  tooltipCallback(index) -          Pointer to function to be used when an element is selected on the graph.
      */
     constructor(id, visualizerConfig, defaultNumDisplayPoints) 
     {
@@ -148,19 +149,35 @@ class DataVisualizer
          this.data = [];
 
 
-        /**
-         * Resets zoom to default number of data points  and pans to the end 
-         * of the graph.
+         /**
+         * Callback when a tooltip is showing with the index of the tooltip.
          * 
-         * @method  resetZoom
-         * @name    DataVisualizer#resetZoom
+         * @method 
+         * @name DataVisualizer#tooltipCallback
+         *
+         * @param {integer} index - Index of data showing in tooltip.
          */
-        this.resetZoom = function()
+         this.tooltipCallback = tooltipCallback;
+
+
+        /**
+         * Reset zoom and pan and calls the tooltip callback with index of
+         * last item.
+         * 
+         * @method  reset
+         * @name    DataVisualizer#reset
+         */
+        this.reset = function()
         {
             this.zoomed = false;
             this.panned = false;
+
+            // resetting to the end of the graph
             this.numDisplayPoints = this.defaultNumDisplayPoints;
             this.startIndex = this.numPackets - this.numDisplayPoints;
+
+            // calling tooltip with the number of the last packet
+            this.tooltipCallback(this.numPackets - 1);
 
             this.refreshChart();
 
@@ -513,6 +530,12 @@ class DataVisualizer
             // setting up config variable for chart
             config.options.scales.yaxes = yAxesConfig;
             config.data.datasets = dataSetsConfig;
+
+            // creating callback for tooltip
+            config.options.tooltips.callbacks.beforeTitle = 
+                function(tooltipItem, data) {
+                    this.tooltipCallback(parseInt(tooltipItem[0].xLabel));
+                }.bind(this)
 
         }.bind(this)
 

@@ -5,6 +5,14 @@ var temperatureData = [];
 var altitudeData = [];
 var humidityData = [];
 
+tooltipCallback = function(index)
+{
+    document.getElementById("table-temperature-data").innerHTML = String(temperatureData[index]) + "°C";
+    document.getElementById("table-altitude-data").innerHTML = String(altitudeData[index]) + "m";
+    document.getElementById("table-humidity-data").innerHTML = String(humidityData[index]) + "%";
+    document.getElementById("table-packetnumber-data").innerHTML = String(index);
+}
+
 window.onload = function() {
     var visualizerConfig = 
     [
@@ -42,7 +50,7 @@ window.onload = function() {
         }
     ];
 
-    chart = new DataVisualizer("linechart", visualizerConfig, 25);
+    chart = new DataVisualizer("linechart", visualizerConfig, 25, tooltipCallback);
 
     for (var i = 0; i < 1200; i++)
     {
