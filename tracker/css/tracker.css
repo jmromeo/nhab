@@ -1,13 +1,21 @@
+.jumbotron {
+    text-align: center;
+}
+
 .col-btn {
-	padding-right: 2px !important;
-	padding-left: 2px !important;
-	padding-bottom: 10px !important;
+    padding-right: 2px !important;
+    padding-left: 2px !important;
+    padding-bottom: 10px !important;
 }
 
 .chart-toggle-buttons {
-	padding-bottom: 20px;
+	  padding-bottom: 20px;
 }
 
 .line-chart {
-	padding-bottom: 20px;
+	  padding-bottom: 20px;
+}
+
+.table {
+    font-size: 15px;
 }

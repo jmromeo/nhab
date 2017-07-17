@@ -50,12 +50,39 @@
         </div>
     </div>
 
-    <!-- Line Chart -->
+    <!-- Line Chart and Data Table -->
     <div class="container">
+
+    		<!-- Line Chart -->
         <div class="row line-chart">
-            <div class="col-md-12">
+            <div class="col-md-10">
                 <canvas id="linechart"></canvas>
             </div>
+
+    				<!-- Data Table -->
+						<div class="col-md-2">
+								<table class="table table-hover table-striped table-compact">
+                    <thead>
+                        <th>Name</th>
+                        <th>Value</th>
+                    </thead>
+
+										<tbody>
+												<tr>
+														<td>Temperature</td>
+														<td>23°C</td>
+												</tr>
+												<tr>
+														<td>Altitude</td>
+														<td>50000m</td>
+												</tr>
+												<tr>
+														<td>Humidity</td>
+														<td>30%</td>
+												</tr>
+										</tbody>
+								</table>
+						</div>
         </div>
     </div>
 
@@ -64,27 +91,27 @@
 
         <!-- Zoom and Pan Buttons -->
         <div class="row">
-            <div class="col-md-1 col-sm-2 col-btn">
+            <div class="col-md-1 col-sm-1 col-btn">
                 <button class="btn btn-default btn-md btn-block" onclick="chart.resetZoom(this)">
                     <span class="glyphicon glyphicon-refresh"></span>
                 </button>
             </div>
-            <div class="col-md-1 col-sm-2 col-btn">
+            <div class="col-md-1 col-sm-1 col-btn">
                 <button class="btn btn-default btn-md btn-block" onclick="chart.zoomIn(this)">
                     <span class="glyphicon glyphicon-zoom-in"></span>
                 </button>
             </div>
-            <div class="col-md-1 col-sm-2 col-btn">
+            <div class="col-md-1 col-sm-1 col-btn">
                 <button class="btn btn-default btn-md btn-block" onclick="chart.zoomOut(this)">
                     <span class="glyphicon glyphicon-zoom-out"></span>
                 </button>
             </div>
-            <div class="col-md-1 col-sm-2 col-btn">
+            <div class="col-md-1 col-sm-1 col-btn">
                 <button class="btn btn-default btn-md btn-block" onclick="chart.pan(null, 'left')">
                     <span class="glyphicon glyphicon-arrow-left"></span>
                 </button>
             </div>
-            <div class="col-md-1 col-sm-2 col-btn">
+            <div class="col-md-1 col-sm-1 col-btn">
                 <button class="btn btn-default btn-md btn-block" onclick="chart.pan(null, 'right')">
                     <span class="glyphicon glyphicon-arrow-right"></span>
                 </button>
