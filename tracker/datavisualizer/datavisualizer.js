@@ -120,6 +120,9 @@ class DataVisualizer
             var dataSet = this.chart.config.data.datasets[dataSetIndex];
             var yAxis = this.chart.config.options.scales.yAxes[dataSetIndex];
 
+            button.classList.remove("altitude-color");
+            console.log(button);
+
             // toggling data and axis visibility
             dataSet.hidden = !dataSet.hidden;
             yAxis.display = !yAxis.display;
