@@ -18,35 +18,35 @@ window.onload = function() {
     [
         // temperature data
         {
-          buttonId: "toggleTemperature",
-          data: temperatureData,
-          datasetIndex: 0,
-          color: 'rgb(133, 255, 76)', 
-          name: "Temperature",
-          units: "°C",
-          fill: "false"
+            buttonId: "toggleTemperature",
+            data: temperatureData,
+            datasetIndex: 0,
+            color: 'rgb(133, 255, 76)', 
+            name: "Temperature",
+            units: "°C",
+            fill: "false"
         },
 
         // altitude data
         {
-          buttonId: "toggleAltitude",
-          data: altitudeData,
-          datasetIndex: 1,
-          color: 'rgb(255, 141, 20)', 
-          name: "Altitude",
-          units: "Meters",
-          fill: "start"
+            buttonId: "toggleAltitude",
+            data: altitudeData,
+            datasetIndex: 1,
+            color: 'rgb(255, 141, 20)', 
+            name: "Altitude",
+            units: "Meters",
+            fill: "start"
         },
 
         // humidity data
         {
-          buttonId: "toggleHumidity",
-          data: humidityData,
-          datasetIndex: 2,
-          color: 'rgb(96, 233, 255)', 
-          name: "Humidity",
-          units: "%",
-          fill: "false"
+            buttonId: "toggleHumidity",
+            data: humidityData,
+            datasetIndex: 2,
+            color: 'rgb(96, 233, 255)', 
+            name: "Humidity",
+            units: "%",
+            fill: "false"
         }
     ];
 

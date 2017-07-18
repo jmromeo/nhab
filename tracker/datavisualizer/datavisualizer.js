@@ -332,11 +332,11 @@ class DataVisualizer
                 this.startIndex -= this.zoomSpeed / 2;
                 if ((this.startIndex + this.numDisplayPoints) < this.numPackets)
                 {
-                  this.endIndex = this.startIndex + this.numDisplayPoints - this.zoomSpeed;
+                    this.endIndex = this.startIndex + this.numDisplayPoints - this.zoomSpeed;
                 }
 
                 if (this.startIndex < 0) {
-                  this.startIndex = 0;
+                    this.startIndex = 0;
                 }
 
                 this.refreshChart();
@@ -356,14 +356,14 @@ class DataVisualizer
          * @param {string} e.deltaY - Amount mousewheel has moved in the vertical direction.
         */
         this.zoom = function(e) {
-          if (e.deltaY < 0) {
-            this.zoomIn(); 
-          }
-          else {
-            this.zoomOut();
-          }
+            if (e.deltaY < 0) {
+                this.zoomIn(); 
+            }
+            else {
+                this.zoomOut();
+            }
 
-          e.preventDefault();
+            e.preventDefault();
         }.bind(this)
 
 
