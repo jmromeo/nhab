@@ -235,6 +235,7 @@ class DataVisualizer
             // for wheel and scroll events
             else 
             {
+                deltaX = e.deltaX;
                 // to fix issue where no scroll happens at all due to rounding of decimal values < |1|
                 if (e.deltaX < 0)
                 {
@@ -356,10 +357,15 @@ class DataVisualizer
          * @param {string} e.deltaY - Amount mousewheel has moved in the vertical direction.
         */
         this.zoom = function(e) {
-            if (e.deltaY < 0) {
+            console.log("deltaX");
+            console.log(e.deltaX);
+            console.log("deltaY");
+            console.log(e.deltaY);
+            
+            if (e.deltaY < -1) {
                 this.zoomIn(); 
             }
-            else {
+            else if (e.deltaY > 1) {
                 this.zoomOut();
             }
 
@@ -368,7 +374,8 @@ class DataVisualizer
 
 
         // set scroll and touch event listeners on canvas to add pan and zoom capabilities
-        document.getElementById(id).addEventListener('wheel', this.zoom); 
+//        document.getElementById(id).addEventListener('wheel', this.zoom); 
+        document.getElementById(id).addEventListener('wheel', this.pan); 
         document.getElementById(id).addEventListener('scroll', this.pan); 
         document.getElementById(id).addEventListener('touchstart', this.pan);
         document.getElementById(id).addEventListener('touchmove', this.pan); 
