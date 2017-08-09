@@ -12,3 +12,12 @@
     <li> If connecting to server from different device, replace 127.0.0.1 with the ip address of server (found using ifconfig) </li>
   </ul>
 </ul>
+
+## Firmware
+
+### Building Firmware
+
+To build firmware, run the following command:
+'''
+sudo apt-get install gcc-avr binutils-avr gdb-avr avr-libc avrdude
+'''
