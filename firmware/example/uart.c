@@ -32,6 +32,9 @@ int main (void)
 
 ISR(USART0_RX_vect)
 {
+  char rxByte;
+
   // echo rx to tx
-  UDR0 = UDR0;
+  rxByte = UDR0;
+  UDR0 = rxByte;
 }
