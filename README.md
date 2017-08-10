@@ -15,9 +15,12 @@
 
 ## Firmware
 
-### Building Firmware
+### Installing AVR Utilities
 
-To build firmware, run the following command:
+AVR utiltiies such as gcc and avrdude are needed to compile code and flash it to target device. To install, run command below:
 ```
 sudo apt-get install gcc-avr binutils-avr gdb-avr avr-libc avrdude
 ```
+
+### Building Firmware
+NO FIRMWARE TO BUILD AND FLASH YET
