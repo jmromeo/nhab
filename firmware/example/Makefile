@@ -9,5 +9,8 @@ led.elf: led.o
 led.hex: led.elf
 	avr-objcopy -O ihex -R ..eeprom led.elf led.hex
 
+flash: led.hex
+	avrdude -c usbtiny -p atmega328p -U flash:w:led.hex
+
 clean:
 	rm *.o *.hex *.elf

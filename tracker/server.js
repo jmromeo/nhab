@@ -1,5 +1,5 @@
 var express = require('express');
-var io      = require('socket.io')();
+//var io      = require('socket.io')();
 var app     = express();
 var router  = express.Router();
 
@@ -17,5 +17,5 @@ app.get('/', function(req, res) {
 app.listen(3000, "0.0.0.0");
 
 // socket server connection callback
-io.on('connection', function (socket) {
-});
+//io.on('connection', function (socket) {
+//});
