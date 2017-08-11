@@ -1,16 +1,16 @@
-default: uart.hex
+default: led.hex
 
-uart.o: uart.c
-	avr-gcc -Os -DF_CPU=16000000UL -mmcu=atmega2560 -c -o uart.o uart.c
+led.o: led.c
+	avr-gcc -Os -DF_CPU=16000000UL -mmcu=atmega2560 -c -o led.o led.c
 
-uart.elf: uart.o
-	avr-gcc -mmcu=atmega2560 uart.o -o uart.elf
+led.elf: led.o
+	avr-gcc -mmcu=atmega2560 led.o -o led.elf
 
-uart.hex: uart.elf
-	avr-objcopy -O ihex -R ..eeprom uart.elf uart.hex
+led.hex: led.elf
+	avr-objcopy -O ihex -R ..eeprom led.elf led.hex
 
-flash: uart.hex
-	avrdude -c usbtiny -p atmega2560 -U flash:w:uart.hex
+flash: led.hex
+	avrdude -c usbtiny -p atmega2560 -U flash:w:led.hex
 
 clean:
 	rm -f *.o *.hex *.elf
