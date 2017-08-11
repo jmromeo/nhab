@@ -21,8 +21,22 @@
 #include "utils/ringbuffer.h"
 
 
-// Defining UART0/1
+/**
+ * @brief Used to access uart0 
+ *
+ * On atmega2561:<b>
+ * Pin2: RXD0 <b>
+ * Pin3: TXD0
+ */
 Uart uart0(&UBRR0, &UCSR0A, &UCSR0B, &UCSR0C, &UDR0);
+
+/**
+ * @brief Used to access uart1
+ *
+ * On atmega2561:<b>
+ * Pin27: RXD0 <b>
+ * Pin28: TXD0
+ */
 Uart uart1(&UBRR1, &UCSR1A, &UCSR1B, &UCSR1C, &UDR1);
 
 /**
@@ -30,8 +44,6 @@ Uart uart1(&UBRR1, &UCSR1A, &UCSR1B, &UCSR1C, &UDR1);
  *
  * @param baudrate  Typical values include 1200, 2400, 4800, 9600, 14400, 19200, 38400, 57600, 128000, 256000.
  *                  If not specified 9600 is used.
- *                  
- * @endcode
  */
 uint16_t Uart::BaudScale(uint16_t baudrate) { (((F_CPU / (baudrate * 16UL))) - 1); }
 
