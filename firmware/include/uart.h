@@ -5,23 +5,28 @@
 
 #include "utils/ringbuffer.h"
 
+#define BUF_SIZE 256
 
 class Uart
 {
-  protected:
-    // protected member variables
+  private:
+    // private member variables
     volatile uint16_t *_ubrr;
     volatile uint8_t *_ucsra;
     volatile uint8_t *_ucsrb;
     volatile uint8_t *_ucsrc;
     volatile uint8_t *_udr;
 
-    RingBuffer <char, 256> rx_buffer;
-    RingBuffer <char, 256> tx_buffer;
+    RingBuffer<char, BUF_SIZE> _rx_buffer;
+    RingBuffer<char, BUF_SIZE> _tx_buffer;
 
 
-    // protected functions
+    // private functions
     static inline uint16_t BaudScale(uint16_t baudrate);
+
+
+    // friend function unavailable outside of uart.cpp
+    friend void _PushRx(Uart *uart, char byte);
 
   public:
 
@@ -32,6 +37,7 @@ class Uart
          volatile uint8_t *ucsrc, 
          volatile uint8_t *udr);
 		void Init(uint16_t baudrate=9600);
+
 };
 
 

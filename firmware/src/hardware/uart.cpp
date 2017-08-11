@@ -20,7 +20,6 @@
 #include "uart.h"
 #include "utils/ringbuffer.h"
 
-
 /**
  * @brief Used to access uart0 
  *
@@ -46,6 +45,7 @@ Uart uart1(&UBRR1, &UCSR1A, &UCSR1B, &UCSR1C, &UDR1);
  *                  If not specified 9600 is used.
  */
 uint16_t Uart::BaudScale(uint16_t baudrate) { (((F_CPU / (baudrate * 16UL))) - 1); }
+
 
 /**
  * @brief Initializes uart with specified baud rate.
@@ -104,12 +104,22 @@ void Uart::Init(uint16_t baudrate)
 }
 
 
+/**
+ * @brief Pushes byte to rx buffer. If buffer is full, nothing happens.
+ *
+ * @param byte  Byte to push to buffer.
+ */
+void _PushRx(Uart *uart, char byte) { uart->_rx_buffer.Push(byte); }
+
 
 ISR(USART0_RX_vect)
 {
-  char rxByte;
+  char rxbyte;
 
   // echo rx to tx
-  rxByte = UDR0;
-  UDR0 = rxByte;
+  rxbyte = UDR0;
+  UDR0 = rxbyte;
+
+  // pushing byte to rxbuff
+  _PushRx(&uart0, rxbyte);
 }
