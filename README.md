@@ -23,4 +23,5 @@ sudo apt-get install gcc-avr binutils-avr gdb-avr avr-libc avrdude
 ```
 
 ### Building Firmware
-NO FIRMWARE TO BUILD AND FLASH YET
+
+Once you have installed the AVR utilities (see [Installing AVR Utilities](#installing-avr-utilities))
