@@ -22,6 +22,20 @@ AVR utiltiies such as gcc and avrdude are needed to compile code and flash it to
 sudo apt-get install gcc-avr binutils-avr gdb-avr avr-libc avrdude
 ```
 
-### Building Firmware
+### Building and Flashing Firmware
 
-Once you have installed the AVR utilities (see [Installing AVR Utilities](#installing-avr-utilities))
+Once you have installed the AVR utilities (see [Installing AVR Utilities](#installing-avr-utilities)), you can build and flash
+your board. The project is currently only tested on the ATMEGA2560.
+
+
+To build firmware:
+```
+cd firmware
+make
+```
+
+To flash firmware:
+```
+cd firmware
+make flash
+```
