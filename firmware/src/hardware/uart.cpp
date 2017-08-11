@@ -1,3 +1,18 @@
+/**
+ * @file uart.cpp
+ *
+ * @brief Contains uart access functionality
+ *
+ * Example usage:
+ * @code
+ *
+ * Uart uart0(&UBRR0, &UCSR0A, &UCSR0B, &UCSR0C, &UDR0);
+ * uart0.Init(9600);
+ *
+ * @endcode
+ */
+
+
 #include <stdint.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>
@@ -5,18 +20,38 @@
 #include "uart.h"
 #include "utils/ringbuffer.h"
 
-// baud rate clk scaling calculation
-#define BAUDRATE 9600
-#define BAUDSCALE (((F_CPU / (BAUDRATE * 16UL))) - 1)
 
-// buffering uart input and output. this is so we're less likely to 
-// lose data, and so we can perform uart using an interrupt driven
-// approach
-RingBuffer <char, 256> rx0_buffer;
-RingBuffer <char, 256> tx0_buffer;
-RingBuffer <char, 256> rx1_buffer;
-RingBuffer <char, 256> tx1_buffer;
+// Defining UART0/1
+Uart uart0(&UBRR0, &UCSR0A, &UCSR0B, &UCSR0C, &UDR0);
+Uart uart1(&UBRR1, &UCSR1A, &UCSR1B, &UCSR1C, &UDR1);
 
+/**
+ * @brief Calculates the clock scale needed to run uart at the specified baud rate.
+ *
+ * @param baudrate  Typical values include 1200, 2400, 4800, 9600, 14400, 19200, 38400, 57600, 128000, 256000.
+ *                  If not specified 9600 is used.
+ *                  
+ * @endcode
+ */
+uint16_t Uart::BaudScale(uint16_t baudrate) { (((F_CPU / (baudrate * 16UL))) - 1); }
+
+/**
+ * @brief Initializes uart with specified baud rate.
+ *
+ * @param ubrr  
+ * @param ucsra  
+ * @param ucsrb  
+ * @param ucsrc  
+ * @param udr
+ *                  
+ * Example usage:
+ * @code
+ *
+ * Uart uart0(&UBRR0, &UCSR0A, &UCSR0B, &UCSR0C, &UDR0);
+ * Uart uart1(&UBRR0, &UCSR0A, &UCSR0B, &UCSR0C, &UDR0);
+ *
+ * @endcode
+ */
 Uart::Uart(volatile uint16_t *ubrr, volatile uint8_t *ucsra, volatile uint8_t *ucsrb, volatile uint8_t *ucsrc, volatile uint8_t *udr)
 {
   _ubrr   = ubrr;
@@ -26,10 +61,25 @@ Uart::Uart(volatile uint16_t *ubrr, volatile uint8_t *ucsra, volatile uint8_t *u
   _udr    = udr;
 }
 
-void Uart::Init()
+
+/**
+ * @brief Initializes uart with specified baud rate.
+ *
+ * @param baudrate  Typical values include 1200, 2400, 4800, 9600, 14400, 19200, 38400, 57600, 128000, 256000.
+ *                  If not specified 9600 is used.
+ *
+ * Example usage:
+ * @code
+ *
+ * Uart uart0(&UBRR0, &UCSR0A, &UCSR0B, &UCSR0C, &UDR0);
+ * uart0.Init(9600);
+ *
+ * @endcode
+ */
+void Uart::Init(uint16_t baudrate)
 {
   // initializing uart to baud rate of 9600
-  *_ubrr = BAUDSCALE;  
+  *_ubrr = BaudScale(baudrate);  
 
   // setting 8 data bits, 1 stop bit, no parity
   *_ucsrc = ((0 << USBS0) | (1 << UCSZ00) | (1 << UCSZ01));
@@ -41,6 +91,8 @@ void Uart::Init()
   *_ucsrb |= ((1 << RXCIE0) | (1 << TXCIE0));
 }
 
+
+
 ISR(USART0_RX_vect)
 {
   char rxByte;
@@ -48,7 +100,4 @@ ISR(USART0_RX_vect)
   // echo rx to tx
   rxByte = UDR0;
   UDR0 = rxByte;
-
-  // load byte into receive buffer
-  rx0_buffer.Push(rxByte);
 }

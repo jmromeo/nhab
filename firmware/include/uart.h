@@ -5,17 +5,11 @@
 
 #include "utils/ringbuffer.h"
 
-// initializing serial 0 and 1 to run at 9600bps 8 data bits, 1 stop bit, no parity
-void UartInit();
-
-// returns true if uart is available, false otherwise
-bool UartAvailable();
-
-
 
 class Uart
 {
   protected:
+    // protected member variables
     volatile uint16_t *_ubrr;
     volatile uint8_t *_ucsra;
     volatile uint8_t *_ucsrb;
@@ -25,14 +19,24 @@ class Uart
     RingBuffer <char, 256> rx_buffer;
     RingBuffer <char, 256> tx_buffer;
 
+
+    // protected functions
+    static inline uint16_t BaudScale(uint16_t baudrate);
+
   public:
+
+    // public functions
     Uart(volatile uint16_t *ubrr, 
          volatile uint8_t *ucsra, 
          volatile uint8_t *ucsrb, 
          volatile uint8_t *ucsrc, 
          volatile uint8_t *udr);
-
-    void Init();
+		void Init(uint16_t baudrate=9600);
 };
+
+
+extern Uart uart0;
+extern Uart uart1;
+
 
 #endif // __UART_H__
