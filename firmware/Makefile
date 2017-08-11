@@ -14,7 +14,7 @@ PROJNAME=nhab
 # Directories
 INCDIR=include 
 OBJDIR=obj
-VPATH=src
+vpath %.cpp src src/hardware
 
 # Compiler/linker Flags
 CC=avr-g++
@@ -24,7 +24,9 @@ LDFLAGS=-mmcu=$(MCUTARGET)
 HDFLAGS=-O ihex -R ..eeprom 
 
 # Object/Source Files 
-_OBJ=main.o
+DEVOBJ=uart.o
+
+_OBJ=main.o $(DEVOBJ)
 OBJ=$(patsubst %,$(OBJDIR)/%,$(_OBJ))
 SRC=$(_OBJ:.o=.cpp)
 
@@ -38,7 +40,7 @@ SRC=$(_OBJ:.o=.cpp)
 default: $(PROJNAME).hex
 
 # building all object files
-$(OBJ): $(SRC)
+$(OBJ): $(OBJDIR)/%.o: %.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # creating executable
