@@ -28,6 +28,10 @@ int main (void)
 
   // enabling interrupts globally
   sei();
+
+  while(1)
+  {
+  }
 }
 
 ISR(USART0_RX_vect)
