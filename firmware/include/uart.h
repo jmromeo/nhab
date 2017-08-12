@@ -29,6 +29,8 @@ class Uart
 
     // giving access to receive/transmit buffers to ISR
     friend void _PushRx(Uart *uart, char byte);
+    friend char _PopTx(Uart *uart);
+    friend bool _TxBuffIsEmpty(Uart *uart);
 
   public:
 
@@ -40,6 +42,7 @@ class Uart
 		void Init(uint16_t baudrate=9600);
     bool Available();
     char Receive();
+    void Transmit(char byte);
 
 };
 

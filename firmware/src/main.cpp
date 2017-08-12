@@ -27,12 +27,12 @@ int main (void)
     if (uart0.Available())
     {
       byte = uart0.Receive();
-      UDR0 = byte;
+      uart0.Transmit(byte);
     }
     if (uart1.Available())
     {
       byte = uart1.Receive();
-      UDR1 = byte;
+      uart1.Transmit(byte);
     }
   }
 }

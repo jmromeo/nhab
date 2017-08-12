@@ -166,10 +166,49 @@ bool Uart::Available()
  * }
  *
  * @endcode
+ *
+ * @return Returns a byte from the uart buffer. If there is nothing in the buffer,
+ *         returns garbage.
  */
 char Uart::Receive()
 {
   return _rx_buffer.Pop();
+}
+
+
+/**
+ * @brief Non-blocking uart transmit.
+ *        
+ * @param Byte to transmit over uart.
+ *
+ * If data is currently being transmitted, add to buffer to be transmitted later.
+ * Kicks off data register empty interrupt if no data is currently being transmitted.
+ *
+ * Example usage:
+ * @code
+ * char byte;
+ *
+ * uart0.Init(9600);
+ *
+ * if (uart0.Available())
+ * {
+ *   byte = uart0.Receive();
+ *   uart0.Transmite(byte);
+ * }
+ *
+ * @endcode
+ */
+void Uart::Transmit(char byte)
+{
+  // pushing byte to tx buffer, then kicking off transmit if none 
+  // already in progress
+  _tx_buffer.Push(byte);
+
+  // if transmit data register is empty, enable transmit data register empty interrupt
+  if (*_ucsra & (1 << UDRE0))
+  {
+    *_ucsrb |= (1 << UDRIE0);
+  }
 }
 
 
@@ -180,12 +219,37 @@ char Uart::Receive()
 /**
  * @brief Pushes byte to rx buffer. If buffer is full, nothing happens.
  *
+ * @param uart  Pointer to uart instance we are reading from.
  * @param byte  Byte to push to buffer.
  */
 void _PushRx(Uart *uart, char byte) 
 { 
   uart->_rx_buffer.Push(byte); 
 } 
+
+/**
+ * @brief Pops byte from tx buffer. If buffer is empty, will return garbage.
+ *
+ * @param uart  Pointer to uart instance we are writing to.
+ *
+ * @return Returns byte from tx buffer.
+ */
+char _PopTx(Uart *uart) 
+{ 
+  return uart->_tx_buffer.Pop(); 
+} 
+
+/**
+ * @brief Pops byte from tx buffer. If buffer is empty, will return garbage.
+ *
+ * @param uart  Pointer to uart instance we are writing to.
+ *
+ * @return uart  Pointer to uart instance we are writing to.
+ */
+bool _TxBuffIsEmpty(Uart *uart)
+{
+  return uart->_tx_buffer.IsEmpty();
+}
 
 
 /********************************************************************************/
@@ -196,11 +260,8 @@ ISR(USART0_RX_vect)
 {
   char rxbyte;
 
-  // echo rx to tx
-  rxbyte = UDR0;
-//  UDR0 = rxbyte;
-
   // pushing byte to rxbuff
+  rxbyte = UDR0;
   _PushRx(&uart0, rxbyte);
 }
 
@@ -208,10 +269,39 @@ ISR(USART1_RX_vect)
 {
   char rxbyte;
 
-  // echo rx to tx
-  rxbyte = UDR1;
-//  UDR1 = rxbyte;
-
   // pushing byte to rxbuff
+  rxbyte = UDR1;
   _PushRx(&uart1, rxbyte);
 }
+
+ISR(USART0_UDRE_vect)
+{
+  char txbyte;
+  
+  txbyte = _PopTx(&uart0);
+  UDR0 = txbyte;
+
+  if (_TxBuffIsEmpty(&uart0))
+  {
+    UCSR0B &= ~(1 << UDRIE0); 
+  }
+}
+
+ISR(USART1_UDRE_vect)
+{
+  char txbyte;
+  
+  txbyte = _PopTx(&uart1);
+  UDR1 = txbyte;
+
+  if (_TxBuffIsEmpty(&uart1))
+  {
+    UCSR1B &= ~(1 << UDRIE0); 
+  }
+}
+
+
+
+
+
+
