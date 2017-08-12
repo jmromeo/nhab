@@ -1,5 +1,8 @@
 # Nomeo High Altitude Ballon
 
+
+
+
 ## Firmware
 
 ### Installing AVR Utilities
@@ -27,6 +30,9 @@ cd firmware
 make flash
 ```
 
+
+
+
 ## Web Tracker Application
 
 <ul>
@@ -41,6 +47,6 @@ make flash
 </ul>
 
 Here's a screenshot of the app in action:
-![ScreenShot](documentation/images/webapp_demo.jpg)
+![ScreenShot](webapp_demo.jpg)
 
 
