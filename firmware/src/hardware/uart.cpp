@@ -18,7 +18,7 @@
 #include <avr/interrupt.h>
 
 #include "uart.h"
-#include "utils/ringbuffer.h"
+#include "util/ringbuffer.h"
 
 /**
  * @brief Used to access uart0 
@@ -44,7 +44,10 @@ Uart uart1(&UBRR1, &UCSR1A, &UCSR1B, &UCSR1C, &UDR1);
  * @param baudrate  Typical values include 1200, 2400, 4800, 9600, 14400, 19200, 38400, 57600, 128000, 256000.
  *                  If not specified 9600 is used.
  */
-uint16_t Uart::BaudScale(uint16_t baudrate) { return (((F_CPU / (baudrate * 16UL))) - 1); }
+uint16_t Uart::BaudScale(uint16_t baudrate) 
+{ 
+  return (((F_CPU / (baudrate * 16UL))) - 1); 
+}
 
 
 /**
@@ -109,7 +112,10 @@ void Uart::Init(uint16_t baudrate)
  *
  * @param byte  Byte to push to buffer.
  */
-void _PushRx(Uart *uart, char byte) { uart->_rx_buffer.Push(byte); }
+void _PushRx(Uart *uart, char byte) 
+{ 
+  uart->_rx_buffer.Push(byte); 
+}
 
 
 ISR(USART0_RX_vect)

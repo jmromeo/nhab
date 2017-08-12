@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#include "utils/ringbuffer.h"
+#include "util/ringbuffer.h"
 
 #define BUF_SIZE 256
 
