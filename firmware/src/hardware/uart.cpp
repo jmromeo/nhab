@@ -129,3 +129,15 @@ ISR(USART0_RX_vect)
   // pushing byte to rxbuff
   _PushRx(&uart0, rxbyte);
 }
+
+ISR(USART1_RX_vect)
+{
+  char rxbyte;
+
+  // echo rx to tx
+  rxbyte = UDR1;
+  UDR1 = rxbyte;
+
+  // pushing byte to rxbuff
+  _PushRx(&uart1, rxbyte);
+}
