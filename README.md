@@ -47,6 +47,6 @@ make flash
 </ul>
 
 Here's a screenshot of the app in action:
-![ScreenShot](webapp_demo.jpg)
+![ScreenShot](webapp_demo.png)
 
 
