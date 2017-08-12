@@ -9,6 +9,8 @@
 
 int main (void)
 {
+  char byte;
+
   // disabling interrupts globally during setup
   cli();
 
@@ -16,11 +18,22 @@ int main (void)
   uart0.Init(9600);
   uart1.Init(9600);
 
+
   // enabling interrupts globally
   sei();
 
   while(1)
   {
+    if (uart0.Available())
+    {
+      byte = uart0.Receive();
+      UDR0 = byte;
+    }
+    if (uart1.Available())
+    {
+      byte = uart1.Receive();
+      UDR1 = byte;
+    }
   }
 }
 

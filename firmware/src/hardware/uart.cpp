@@ -20,6 +20,10 @@
 #include "uart.h"
 #include "util/ringbuffer.h"
 
+/********************************************************************************/
+/*************************** EXTERN UART ACCESSORS ******************************/
+/********************************************************************************/
+
 /**
  * @brief Used to access uart0 
  *
@@ -38,17 +42,30 @@ Uart uart0(&UBRR0, &UCSR0A, &UCSR0B, &UCSR0C, &UDR0);
  */
 Uart uart1(&UBRR1, &UCSR1A, &UCSR1B, &UCSR1C, &UDR1);
 
+
+/********************************************************************************/
+/*************************** PRIVATE FUNCTIONS **********************************/
+/********************************************************************************/
+
 /**
  * @brief Calculates the clock scale needed to run uart at the specified baud rate.
  *
  * @param baudrate  Typical values include 1200, 2400, 4800, 9600, 14400, 19200, 38400, 57600, 128000, 256000.
  *                  If not specified 9600 is used.
+ *
+ * @return 16-bit unsigned integer representing the baud scale value that 
+ *         corresponds to the specified baudrate.
  */
 uint16_t Uart::BaudScale(uint16_t baudrate) 
 { 
   return (((F_CPU / (baudrate * 16UL))) - 1); 
 }
 
+
+
+/********************************************************************************/
+/*************************** PUBLIC FUNCTIONS ***********************************/
+/********************************************************************************/
 
 /**
  * @brief Initializes uart with specified baud rate.
@@ -67,7 +84,8 @@ uint16_t Uart::BaudScale(uint16_t baudrate)
  *
  * @endcode
  */
-Uart::Uart(volatile uint16_t *ubrr, volatile uint8_t *ucsra, volatile uint8_t *ucsrb, volatile uint8_t *ucsrc, volatile uint8_t *udr)
+Uart::Uart(volatile uint16_t *ubrr, volatile uint8_t *ucsra, 
+           volatile uint8_t *ucsrb, volatile uint8_t *ucsrc, volatile uint8_t *udr)
 {
   _ubrr   = ubrr;
   _ucsra  = ucsra;
@@ -86,7 +104,6 @@ Uart::Uart(volatile uint16_t *ubrr, volatile uint8_t *ucsra, volatile uint8_t *u
  * Example usage:
  * @code
  *
- * Uart uart0(&UBRR0, &UCSR0A, &UCSR0B, &UCSR0C, &UDR0);
  * uart0.Init(9600);
  *
  * @endcode
@@ -108,6 +125,59 @@ void Uart::Init(uint16_t baudrate)
 
 
 /**
+ * @brief Returns true if there is data in the receive buffer, false otherwise.
+ *
+ * Example usage:
+ * @code
+ *
+ * char byte;
+ *
+ * uart0.Init(9600);
+ *
+ * if (uart0.Available())
+ * {
+ *   byte = uart0.Receive();
+ * }
+ *
+ * @endcode
+ *
+ * @return Returns true if there is data to read in buffer, false otherwise
+ */
+bool Uart::Available()
+{
+  return !_rx_buffer.IsEmpty();
+}
+
+
+/**
+ * @brief Grabs a byte from the receive buffer. Note that a check should
+ *        be made to see if there is data in buffer, else you may receive garbage.
+ *
+ * Example usage:
+ * @code
+ *
+ * char byte;
+ *
+ * uart0.Init(9600);
+ *
+ * if (uart0.Available())
+ * {
+ *   byte = uart0.Receive();
+ * }
+ *
+ * @endcode
+ */
+char Uart::Receive()
+{
+  return _rx_buffer.Pop();
+}
+
+
+/********************************************************************************/
+/*************************** FRIEND FUNCTIONS ***********************************/
+/********************************************************************************/
+
+/**
  * @brief Pushes byte to rx buffer. If buffer is full, nothing happens.
  *
  * @param byte  Byte to push to buffer.
@@ -115,8 +185,12 @@ void Uart::Init(uint16_t baudrate)
 void _PushRx(Uart *uart, char byte) 
 { 
   uart->_rx_buffer.Push(byte); 
-}
+} 
 
+
+/********************************************************************************/
+/********************************* ISRs *****************************************/
+/********************************************************************************/
 
 ISR(USART0_RX_vect)
 {
@@ -124,7 +198,7 @@ ISR(USART0_RX_vect)
 
   // echo rx to tx
   rxbyte = UDR0;
-  UDR0 = rxbyte;
+//  UDR0 = rxbyte;
 
   // pushing byte to rxbuff
   _PushRx(&uart0, rxbyte);
@@ -136,7 +210,7 @@ ISR(USART1_RX_vect)
 
   // echo rx to tx
   rxbyte = UDR1;
-  UDR1 = rxbyte;
+//  UDR1 = rxbyte;
 
   // pushing byte to rxbuff
   _PushRx(&uart1, rxbyte);

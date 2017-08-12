@@ -5,38 +5,41 @@
 
 #include "util/ringbuffer.h"
 
-#define BUF_SIZE 256
+#define BUFF_SIZE 256
 
 class Uart
 {
   private:
-    // private member variables
+
+    // pointers to uart setup and data registers
     volatile uint16_t *_ubrr;
     volatile uint8_t *_ucsra;
     volatile uint8_t *_ucsrb;
     volatile uint8_t *_ucsrc;
     volatile uint8_t *_udr;
 
-    RingBuffer<char, BUF_SIZE> _rx_buffer;
-    RingBuffer<char, BUF_SIZE> _tx_buffer;
+    // buffers used for receive and transmit
+    RingBuffer<char, BUFF_SIZE> _rx_buffer;
+    RingBuffer<char, BUFF_SIZE> _tx_buffer;
 
 
-    // private functions
+    // helper functions for uart setup
     static inline uint16_t BaudScale(uint16_t baudrate);
 
 
-    // friend function unavailable outside of uart.cpp
+    // giving access to receive/transmit buffers to ISR
     friend void _PushRx(Uart *uart, char byte);
 
   public:
 
-    // public functions
-    Uart(volatile uint16_t *ubrr, 
-         volatile uint8_t *ucsra, 
-         volatile uint8_t *ucsrb, 
-         volatile uint8_t *ucsrc, 
-         volatile uint8_t *udr);
+    // constructor
+    Uart(volatile uint16_t *ubrr, volatile uint8_t *ucsra, 
+         volatile uint8_t *ucsrb, volatile uint8_t *ucsrc, volatile uint8_t *udr);
+
+    // setup and receive/transmit
 		void Init(uint16_t baudrate=9600);
+    bool Available();
+    char Receive();
 
 };
 
