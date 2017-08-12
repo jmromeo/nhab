@@ -44,7 +44,7 @@ Uart uart1(&UBRR1, &UCSR1A, &UCSR1B, &UCSR1C, &UDR1);
  * @param baudrate  Typical values include 1200, 2400, 4800, 9600, 14400, 19200, 38400, 57600, 128000, 256000.
  *                  If not specified 9600 is used.
  */
-uint16_t Uart::BaudScale(uint16_t baudrate) { (((F_CPU / (baudrate * 16UL))) - 1); }
+uint16_t Uart::BaudScale(uint16_t baudrate) { return (((F_CPU / (baudrate * 16UL))) - 1); }
 
 
 /**
@@ -90,7 +90,7 @@ Uart::Uart(volatile uint16_t *ubrr, volatile uint8_t *ucsra, volatile uint8_t *u
  */
 void Uart::Init(uint16_t baudrate)
 {
-  // initializing uart to baud rate of 9600
+  // initializing uart to specified baud rate
   *_ubrr = BaudScale(baudrate);  
 
   // setting 8 data bits, 1 stop bit, no parity
