@@ -7,6 +7,8 @@
 // mcu hardware access
 #include "uart.h"
 
+#include "util/ringbuffer.h"
+
 int main (void)
 {
   char byte;
@@ -18,6 +20,9 @@ int main (void)
   uart0.Init(9600);
   uart1.Init(9600);
 
+
+  _delay_ms(10000);
+  uart0.Print("Hello World\n\r");
 
   // enabling interrupts globally
   sei();
