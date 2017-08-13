@@ -75,11 +75,11 @@ uint16_t Uart::BaudScale(uint16_t baudrate)
 /**
  * @brief Initializes uart with specified baud rate.
  *
- * @param ubrr  
- * @param ucsra  
- * @param ucsrb  
- * @param ucsrc  
- * @param udr
+ * @param ubrr    Pointer to UBRRn usart baud rate register
+ * @param ucsra   Pointer to UCSRnA usart control and status register A.
+ * @param ucsrb   Pointer to CUSRnB usart control and status register B.
+ * @param ucsrc   Pointer to UCSRnC usart control and status register C.
+ * @param udr     Pointer to UDRn usart data register.
  *                  
  * Example usage:
  * @code
