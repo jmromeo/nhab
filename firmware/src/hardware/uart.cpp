@@ -6,8 +6,13 @@
  * Example usage:
  * @code
  *
- * Uart uart0(&UBRR0, &UCSR0A, &UCSR0B, &UCSR0C, &UDR0);
  * uart0.Init(9600);
+ *
+ * if (uart0.Available())
+ * {
+ *   byte = uart0.Receive();
+ *   uart0.Transmite(byte);
+ * }
  *
  * @endcode
  */
