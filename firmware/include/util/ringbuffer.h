@@ -10,7 +10,7 @@ class RingBuffer {
         volatile uint8_t head;
         volatile uint8_t tail;
         uint8_t MAXSIZE_MASK;
-        T       buffer[N]; 
+        volatile T buffer[N]; 
 
     public:
         RingBuffer() 

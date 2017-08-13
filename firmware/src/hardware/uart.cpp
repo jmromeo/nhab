@@ -125,7 +125,7 @@ void Uart::Init(uint16_t baudrate)
   *_ucsrb = ((1 << RXEN0) | (1 << TXEN0));
 
   // enabling uart interrupts
-  *_ucsrb |= ((1 << RXCIE0) | (1 << TXCIE0));
+  *_ucsrb |= ((1 << RXCIE0));
 }
 
 
@@ -209,10 +209,31 @@ void Uart::Transmit(char byte)
   // already in progress
   _tx_buffer.Push(byte);
 
-  // if transmit data register is empty, enable transmit data register empty interrupt
-  if (*_ucsra & (1 << UDRE0))
+  // enable transmit data register empty interrupt
+  *_ucsrb |= (1 << UDRIE0);
+}
+
+
+/**
+ * @brief Prints characters 1 byte at a time until null terminator is reached.
+ *
+ * @param Pointer to character array with null terminator symbol at the end '\0'.
+ *
+ * Example usage:
+ * @code
+ *
+ * uart0.Init(9600);
+ *
+ * uart0.Print("Hello World\n");
+ *
+ * @endcode
+ */
+void Uart::Print(const char *byte)
+{
+  while (*byte != '\0')
   {
-    *_ucsrb |= (1 << UDRIE0);
+    Transmit(*byte);
+    byte++;
   }
 }
 
