@@ -14,15 +14,17 @@ class GPS635T
     // NMEA messages
     struct PSRF103
     {
-      const char msgid[9] = {'$', 'P', 'S', 'R', 'F', '1', '0', '3', '\0'};
-      char mode[2];
-      char rate[2];
-      const char checksum = {'0', '0'};
+      static const char msgid[];
+      char              msg[];
+      static const char mode[];
+      static const char rate[];
+      static const char checksum_enable[];
+      static const char endmsg[];
     };
 
   public:
 
-    static enum NmeaFormats
+    enum NmeaFormats
     {
       GPGAA = 0,
       GPGLL,
@@ -37,9 +39,15 @@ class GPS635T
     GPS635T(Uart *uart);
 
     // setup and access GPS data
-		void Init();
+		void Init(uint8_t nmea = 0xFF);
 };
 
+
+const char GPS635T::PSRF103::msgid[]           = "$PSRF103";
+const char GPS635T::PSRF103::mode[]            = "00";
+const char GPS635T::PSRF103::rate[]            = "00";
+const char GPS635T::PSRF103::checksum_enable[] = "00";
+const char GPS635T::PSRF103::endmsg[]          = "\r\n";
 
 
 #endif // __GPS635T_H__

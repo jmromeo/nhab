@@ -14,7 +14,7 @@ PROJNAME=nhab
 # Directories
 INCDIR=include 
 OBJDIR=obj
-vpath %.cpp src src/hardware
+vpath %.cpp src src/hardware src/devices
 
 # Compiler/linker Flags
 CC=avr-g++
@@ -25,7 +25,7 @@ LDFLAGS=-mmcu=$(MCUTARGET)
 HDFLAGS=-O ihex -R ..eeprom 
 
 # Object/Source Files 
-DEVOBJ=uart.o
+DEVOBJ=uart.o gps635t.o
 
 _OBJ=main.o $(DEVOBJ)
 OBJ=$(patsubst %,$(OBJDIR)/%,$(_OBJ))

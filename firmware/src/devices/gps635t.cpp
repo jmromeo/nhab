@@ -12,7 +12,9 @@
 
 #include <stdint.h>
 
+#include "gps635t.h"
 #include "uart.h"
+
 
 
 /********************************************************************************/
@@ -58,12 +60,10 @@ GPS635T::GPS635T(Uart *uart)
  *
  * @endcode
  */
-GPS635T::Init(uint8_t nmea = 0xFF)
+void GPS635T::Init(uint8_t nmea)
 {
   PSRF103 nmea_message; 
   uint8_t i;
-
-  nmea_message.mode[0]
 
   if (nmea != 0xFF)
   {
@@ -71,7 +71,13 @@ GPS635T::Init(uint8_t nmea = 0xFF)
     {
       if (!((1 << i) & nmea))
       {
-        
+        nmea_message.msg[0] = '0' + i;
+        _uart->Print(nmea_message.msgid);
+        _uart->Print(nmea_message.msg);
+        _uart->Print(nmea_message.mode);
+        _uart->Print(nmea_message.rate);
+        _uart->Print(nmea_message.checksum_enable);
+        _uart->Print(nmea_message.endmsg);
       }
     }
   }
