@@ -243,38 +243,36 @@ void Uart::Print(const char *byte)
 /********************************************************************************/
 
 /**
- * @brief Pushes byte to rx buffer. If buffer is full, nothing happens.
+ * @brief USART Receive handler, pushes byte to _rx_buffer for reading later.
  *
  * @param uart  Pointer to uart instance we are reading from.
- * @param byte  Byte to push to buffer.
  */
-void _PushRx(Uart *uart, char byte) 
-{ 
-  uart->_rx_buffer.Push(byte); 
-} 
-
-/**
- * @brief Pops byte from tx buffer. If buffer is empty, will return garbage.
- *
- * @param uart  Pointer to uart instance we are writing to.
- *
- * @return Returns byte from tx buffer.
- */
-char _PopTx(Uart *uart) 
-{ 
-  return uart->_tx_buffer.Pop(); 
-} 
-
-/**
- * @brief Pops byte from tx buffer. If buffer is empty, will return garbage.
- *
- * @param uart  Pointer to uart instance we are writing to.
- *
- * @return uart  Pointer to uart instance we are writing to.
- */
-bool _TxBuffIsEmpty(Uart *uart)
+void _RxRxcIsr(Uart *uart)
 {
-  return uart->_tx_buffer.IsEmpty();
+  char rxbyte;
+
+  // pushing byte to rxbuff
+  rxbyte = UDR0;
+  uart->_rx_buffer.Push(rxbyte);
+}
+
+/**
+ * @brief USART Data Register Empty handler, pops byte from _tx_buffer and writes
+ *        to data register.
+ *
+ * @param uart  Pointer to uart instance we are writing to.
+ */
+void _TxUdreIsr(Uart *uart)
+{
+  char txbyte;
+  
+  txbyte = uart->_tx_buffer.Pop();
+  UDR0 = txbyte;
+
+  if (uart->_tx_buffer.IsEmpty())
+  {
+    *(uart->_ucsrb) &= ~(1 << UDRIE0); 
+  }
 }
 
 
@@ -284,46 +282,22 @@ bool _TxBuffIsEmpty(Uart *uart)
 
 ISR(USART0_RX_vect)
 {
-  char rxbyte;
-
-  // pushing byte to rxbuff
-  rxbyte = UDR0;
-  _PushRx(&uart0, rxbyte);
+  _RxRxcIsr(&uart0);
 }
 
 ISR(USART1_RX_vect)
 {
-  char rxbyte;
-
-  // pushing byte to rxbuff
-  rxbyte = UDR1;
-  _PushRx(&uart1, rxbyte);
+  _RxRxcIsr(&uart1);
 }
 
 ISR(USART0_UDRE_vect)
 {
-  char txbyte;
-  
-  txbyte = _PopTx(&uart0);
-  UDR0 = txbyte;
-
-  if (_TxBuffIsEmpty(&uart0))
-  {
-    UCSR0B &= ~(1 << UDRIE0); 
-  }
+  _TxUdreIsr(&uart0);
 }
 
 ISR(USART1_UDRE_vect)
 {
-  char txbyte;
-  
-  txbyte = _PopTx(&uart1);
-  UDR1 = txbyte;
-
-  if (_TxBuffIsEmpty(&uart1))
-  {
-    UCSR1B &= ~(1 << UDRIE0); 
-  }
+  _TxUdreIsr(&uart1);
 }
 
 

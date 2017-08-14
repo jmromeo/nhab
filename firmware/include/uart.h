@@ -27,10 +27,9 @@ class Uart
     static inline uint16_t BaudScale(uint16_t baudrate);
 
 
-    // giving access to receive/transmit buffers to ISR
-    friend void _PushRx(Uart *uart, char byte);
-    friend char _PopTx(Uart *uart);
-    friend bool _TxBuffIsEmpty(Uart *uart);
+    // isr for transmit and receive
+    friend void _RxRxcIsr(Uart *uart);
+    friend void _TxUdreIsr(Uart *uart);
 
   public:
 
