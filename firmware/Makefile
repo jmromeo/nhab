@@ -29,8 +29,6 @@ DEVOBJ=uart.o gps635t.o
 
 _OBJ=main.o $(DEVOBJ)
 OBJ=$(patsubst %,$(OBJDIR)/%,$(_OBJ))
-SRC=$(_OBJ:.o=.cpp)
-
 
 
 ##############################
