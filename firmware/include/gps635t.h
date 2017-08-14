@@ -5,6 +5,7 @@
 
 #include "uart.h"
 
+
 class GPS635T
 {
   private:
@@ -15,7 +16,7 @@ class GPS635T
     struct PSRF103
     {
       static const char msgid[];
-      char              msg[];
+      char              msg[4];
       static const char mode[];
       static const char rate[];
       static const char checksum_enable[];
@@ -41,13 +42,6 @@ class GPS635T
     // setup and access GPS data
 		void Init(uint8_t nmea = 0xFF);
 };
-
-
-const char GPS635T::PSRF103::msgid[]           = "$PSRF103";
-const char GPS635T::PSRF103::mode[]            = "00";
-const char GPS635T::PSRF103::rate[]            = "00";
-const char GPS635T::PSRF103::checksum_enable[] = "00";
-const char GPS635T::PSRF103::endmsg[]          = "\r\n";
 
 
 #endif // __GPS635T_H__

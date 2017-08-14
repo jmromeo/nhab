@@ -7,7 +7,9 @@
 // mcu hardware access
 #include "uart.h"
 
-#include "util/ringbuffer.h"
+// devices
+#include "gps635t.h"
+
 
 int main (void)
 {
@@ -16,28 +18,31 @@ int main (void)
   // disabling interrupts globally during setup
   cli();
 
+
   // initializing uart0/1 with baud rate of 9600
   uart0.Init(9600);
   uart1.Init(9600);
 
 
-  _delay_ms(10000);
-  uart0.Print("Hello World\n\r");
-
   // enabling interrupts globally
   sei();
 
+
+//  _delay_ms(10000);
+
+
+  // initializing gps device
+  GPS635T gps(&uart1);
+  gps.Init(1 << GPS635T::GPGAA);
+
+
   while(1)
   {
-    if (uart0.Available())
-    {
-      byte = uart0.Receive();
-      uart0.Transmit(byte);
-    }
+    // reading gps data and transmitting to terminal
     if (uart1.Available())
     {
       byte = uart1.Receive();
-      uart1.Transmit(byte);
+      uart0.Transmit(byte);
     }
   }
 }

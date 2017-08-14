@@ -18,8 +18,15 @@
 
 
 /********************************************************************************/
-/*************************** PRIVATE FUNCTIONS **********************************/
+/********************** PRIVATE CONST EXPRESS ***********************************/
 /********************************************************************************/
+
+const char GPS635T::PSRF103::msgid[]           = "$PSRF103,";
+const char GPS635T::PSRF103::mode[]            = "00,";
+const char GPS635T::PSRF103::rate[]            = "00,";
+const char GPS635T::PSRF103::checksum_enable[] = "00";
+const char GPS635T::PSRF103::endmsg[]          = "\r\n";
+
 
 
 
@@ -56,7 +63,7 @@ GPS635T::GPS635T(Uart *uart)
  *
  * GPS635T gps(&uart0);
  *
- * gps.Init((1 << GPS635T.GPGAA) | (1 << GPS635T.GPGLL));
+ * gps.Init((1 << GPS635T::GPGAA) | (1 << GPS635T::GPGLL));
  *
  * @endcode
  */
@@ -65,13 +72,17 @@ void GPS635T::Init(uint8_t nmea)
   PSRF103 nmea_message; 
   uint8_t i;
 
+  nmea_message.msg[0] = '0';
+  nmea_message.msg[2] = ',';
+  nmea_message.msg[3] = '\0';
+
   if (nmea != 0xFF)
   {
     for (i = 0; i < GPEND; i++)
     {
       if (!((1 << i) & nmea))
       {
-        nmea_message.msg[0] = '0' + i;
+        nmea_message.msg[1] = '0' + i;
         _uart->Print(nmea_message.msgid);
         _uart->Print(nmea_message.msg);
         _uart->Print(nmea_message.mode);
