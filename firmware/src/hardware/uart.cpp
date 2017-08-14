@@ -252,7 +252,7 @@ void _RxRxcIsr(Uart *uart)
   char rxbyte;
 
   // pushing byte to rxbuff
-  rxbyte = UDR0;
+  rxbyte = *(uart->_udr);
   uart->_rx_buffer.Push(rxbyte);
 }
 
@@ -267,7 +267,7 @@ void _TxUdreIsr(Uart *uart)
   char txbyte;
   
   txbyte = uart->_tx_buffer.Pop();
-  UDR0 = txbyte;
+  *(uart->_udr) = txbyte;
 
   if (uart->_tx_buffer.IsEmpty())
   {
