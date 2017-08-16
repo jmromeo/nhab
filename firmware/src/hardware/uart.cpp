@@ -186,8 +186,7 @@ char Uart::Receive()
  *        
  * @param Byte to transmit over uart.
  *
- * If data is currently being transmitted, add to buffer to be transmitted later.
- * Kicks off data register empty interrupt if no data is currently being transmitted.
+ * Adds data to transmit buffer then kicks off transmit buffer empty interrupt.
  *
  * Example usage:
  * @code
@@ -205,11 +204,8 @@ char Uart::Receive()
  */
 void Uart::Transmit(char byte)
 {
-  // pushing byte to tx buffer, then kicking off transmit if none 
-  // already in progress
+  // pushing byte to tx buffer and enabling transmit data register empty interrupt
   _tx_buffer.Push(byte);
-
-  // enable transmit data register empty interrupt
   *_ucsrb |= (1 << UDRIE0);
 }
 
