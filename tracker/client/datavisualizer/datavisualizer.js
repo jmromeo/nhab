@@ -432,14 +432,12 @@ class DataVisualizer
 
 
         /**
-         * Adds the specified data to each dataset. There should be 1 value for 
-         * each dataset in the graph.
+         * Redraws chart according to the new data and index values. Needs ot be
+         * called at the end of pan/zoom/add data point functions.
          *
-         * @method  addDataPoint 
-         * @name    DataVisualizer#addDataPoint
+         * @method  refreshChart 
+         * @name    DataVisualizer#refreshChart
          * 
-         * @param {Objects[]} data - Array with 1 value for each dataset. 
-         *                           If a visible dataset, the value should be an integer.
          */
         this.refreshChart = function()
         {
