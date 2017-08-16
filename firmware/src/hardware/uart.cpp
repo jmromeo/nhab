@@ -85,7 +85,7 @@ uint16_t Uart::BaudScale(uint16_t baudrate)
  * @code
  *
  * Uart uart0(&UBRR0, &UCSR0A, &UCSR0B, &UCSR0C, &UDR0);
- * Uart uart1(&UBRR0, &UCSR0A, &UCSR0B, &UCSR0C, &UDR0);
+ * Uart uart1(&UBRR1, &UCSR1A, &UCSR1B, &UCSR1C, &UDR1);
  *
  * @endcode
  */
