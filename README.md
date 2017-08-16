@@ -46,7 +46,7 @@ make flash
   </ul>
 </ul>
 
-Here's a screenshot of the app in action:
+Here's a screenshot of the app in action (note, currently no connection between firmware and web app, so data in image below is random):
 ![ScreenShot](documentation/images/webapp_demo.png)
 
 
