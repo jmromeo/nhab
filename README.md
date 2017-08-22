@@ -36,11 +36,11 @@ To view documentation for firmware:
 ```
 cd firmware
 make docs
-cd ../documentaiton/firmware
 ```
 
 Then open index.html in your favorite browser:
 ```
+cd ../documentaiton/firmware
 chromium-browser index.html &
 ```
 
