@@ -20,7 +20,7 @@ vpath %.cpp src src/hardware src/devices
 CC=avr-g++
 OBJCOPY=avr-objcopy
 OBJDUMP=avr-objdump
-CFLAGS=-I$(INCDIR) -Os -DF_CPU=$(CPUSPEED) -mmcu=$(MCUTARGET)
+CFLAGS=-g -I$(INCDIR) -Os -DF_CPU=$(CPUSPEED) -mmcu=$(MCUTARGET)
 LDFLAGS=-mmcu=$(MCUTARGET)
 HDFLAGS=-O ihex -R ..eeprom 
 
@@ -51,7 +51,7 @@ $(PROJNAME).hex: $(PROJNAME).elf
 	$(OBJCOPY) $(HDFLAGS) $^ $@	
 
 dump: $(PROJNAME).elf
-	$(OBJDUMP) -d $^ > $(PROJNAME).dump
+	$(OBJDUMP) -S $^ > $(PROJNAME).dump
 
 # flash 
 flash: $(PROJNAME).hex
