@@ -50,12 +50,17 @@ $(PROJNAME).elf: $(OBJ)
 $(PROJNAME).hex: $(PROJNAME).elf
 	$(OBJCOPY) $(HDFLAGS) $^ $@	
 
+# create mixed source/assembly dump
 dump: $(PROJNAME).elf
 	$(OBJDUMP) -S $^ > $(PROJNAME).dump
 
 # flash 
 flash: $(PROJNAME).hex
 	avrdude -c $(PROGRAMMER) -p $(MCUTARGET) -U flash:w:$(PROJNAME).hex
+
+# generate firmware documentation
+docs:
+	doxygen .doxy_config
 
 clean:
 	rm -f $(OBJDIR)/*.o *.elf *.hex *.dump
