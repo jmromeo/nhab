@@ -13,7 +13,6 @@
 #include <stdint.h>
 
 #include "gps635t.h"
-#include "uart.h"
 
 
 
@@ -47,7 +46,7 @@
  *
  * @endcode
  */
-void UBX6::CalculateChecksum(UbxMessage *ubxmessage, void *payload, Uart *uart)
+void UBX6::CalculateChecksum(UbxMessage *ubxmessage, void *payload)
 {
   uint16_t i;
   char *data;

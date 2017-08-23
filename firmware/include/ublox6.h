@@ -2,7 +2,6 @@
 #define __UBLOX6_H__
 
 #include <stdint.h>
-#include "uart.h"
 
 /**
  * @defgroup UbxMessageClassIds UBX Message Class IDs
@@ -282,7 +281,7 @@ struct UbxMessage
 class UBX6
 {
   public:
-    static void CalculateChecksum(UbxMessage *ubxmessage, void *payload, Uart *uart);
+    static void CalculateChecksum(UbxMessage *ubxmessage, void *payload);
 };
 
 #endif // __UBLOX6_H__
