@@ -10,7 +10,7 @@ led.hex: led.elf
 	avr-objcopy -O ihex -R ..eeprom led.elf led.hex
 
 flash: led.hex
-	avrdude -c usbtiny -p atmega2560 -U flash:w:led.hex
+	avrdude -P /dev/ttyACM0 -c wiring -p atmega2560 -b115200 -D -U flash:w:led.hex
 
 dump: led.elf
 	avr-objdump --all-headers -S led.elf -I. > led.s
