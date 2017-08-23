@@ -33,7 +33,7 @@ int main (void)
 
   // initializing gps device
   GPS635T gps(&uart1);
-  gps.DisableNmeaSequence(NMEA_ID_GGA);
+  gps.DisableNmeaSequence(NMEA_ID_GLL);
   gps.DisableNmeaSequence(NMEA_ID_GSA);
   gps.DisableNmeaSequence(NMEA_ID_GSV);
   gps.DisableNmeaSequence(NMEA_ID_RMC);

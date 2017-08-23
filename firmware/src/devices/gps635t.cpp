@@ -40,32 +40,36 @@ GPS635T::GPS635T(Uart *uart)
 
 
 /**
- * @brief Disables the specified nmea sequence.
+ * @brief Sends UBX message to GPS device.
  *
- * @param nmeasequence NMEA Sequence to disable. See @link NMEAMessages NMEA Messages @endlink
+ * @param ubx_classid Class ID of desired UBX message. See @link NMEAMessages NMEA Messages @endlink
+ *                    for more information.
+ * @param ubx_msgid   Message ID of desired UBX message. See @link NMEAMessages NMEA Messages @endlink
+ *                    for more information.
+ * @param payloadsize Size of payload to be sent to gps device.
+ * @param payload     Pointer to payload to be sent to gps device
  *
+ * Example usage:
  * Example usage:
  * @code
  *
- * GPS635T gps(&uart0);
+ * PayloadCfgMsg payload;  
  *
- * // disable GGA
- * gps.DisableNmeaSequence(NMEA_ID_GGA);
+ * payload.msgclass = NMEA_CLASS_STANDARD;
+ * payload.msgid    = nmeasequence;
+ * payload.rate[0]  = 0;
+ *
+ * SendMessage(UBX_CLASS_CFG, UBX_CFG_MSG, 3, &payload);
  *
  * @endcode
  */
-void GPS635T::DisableNmeaSequence(uint8_t nmeasequence)
+void GPS635T::SendMessage(uint8_t ubx_classid, uint8_t ubx_msgid, uint16_t payloadsize, void *payload)
 {
-  UbxMessage    message;
-  PayloadCfgMsg payload;  
+  UbxMessage message;
 
-  payload.msgclass = NMEA_CLASS_STANDARD;
-  payload.msgid    = nmeasequence;
-  payload.rate[0]  = 0;
-
-  message.classid = UBX_CLASS_CFG;
-  message.msgid   = UBX_CFG_MSG;
-  message.length  = 3;
+  message.classid = ubx_classid;
+  message.msgid   = ubx_msgid;
+  message.length  = payloadsize;
 
   UBX6::CalculateChecksum(&message, (void *)&payload);
 
@@ -85,6 +89,32 @@ void GPS635T::DisableNmeaSequence(uint8_t nmeasequence)
   // transmitting checksum
   _uart->Transmit(message.checksumA);
   _uart->Transmit(message.checksumB);
+}
+
+/**
+ * @brief Disables the specified nmea sequence.
+ *
+ * @param nmeasequence NMEA Sequence to disable. See @link NMEAMessages NMEA Messages @endlink
+ *
+ * Example usage:
+ * @code
+ *
+ * GPS635T gps(&uart0);
+ *
+ * // disable GGA
+ * gps.DisableNmeaSequence(NMEA_ID_GGA);
+ *
+ * @endcode
+ */
+void GPS635T::DisableNmeaSequence(uint8_t nmeasequence)
+{
+  PayloadCfgMsg payload;  
+
+  payload.msgclass = NMEA_CLASS_STANDARD;
+  payload.msgid    = nmeasequence;
+  payload.rate[0]  = 0;
+
+  SendMessage(UBX_CLASS_CFG, UBX_CFG_MSG, 3, &payload);
 }
 
 

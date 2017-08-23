@@ -11,6 +11,7 @@ class GPS635T : private UBX6
 {
   private:
     Uart *_uart;
+    void SendMessage(uint8_t ubx_classid, uint8_t ubx_msgid, uint16_t payloadsize, void *payload);
 
   public:
 
