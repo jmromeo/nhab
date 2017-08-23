@@ -31,10 +31,26 @@ cd firmware
 make
 ```
 
-To flash firmware:
+Flashing happens over USB interface. Plug in Arduino MEGA2560, then run dmesg:
+```
+dmesg | tail
+```
+You should see output similar to what is shown below:
+<pre>
+[ 6324.585524] usb 2-1: USB disconnect, device number 8
+[ 6330.789620] usb 2-1: new full-speed USB device number 9 using uhci_hcd
+[ 6330.927578] usb 2-1: New USB device found, idVendor=2a03, idProduct=0042
+[ 6330.927581] usb 2-1: New USB device strings: Mfr=1, Product=2, SerialNumber=220
+[ 6330.927583] usb 2-1: Product: Arduino Mega    
+[ 6330.927584] usb 2-1: Manufacturer: Arduino Srl            
+[ 6330.927585] usb 2-1: SerialNumber: 75633313133351C0E071
+[ 6330.993938] cdc_acm 2-1:1.0: <b>ttyACM0</b>: USB ACM device
+</pre>
+
+Given the port from the dmesg command, you can flash the board:
 ```
 cd firmware
-make flash
+make flash PORT=/dev/<b>ttyACM0</b>
 ```
 
 ### Documentation
