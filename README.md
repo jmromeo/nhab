@@ -12,6 +12,13 @@ AVR utiltiies such as gcc and avrdude are needed to compile code and flash it to
 sudo apt-get install gcc-avr binutils-avr gdb-avr avr-libc avrdude
 ```
 
+### Installing Doxygen
+
+To build firmware documentation, doxygen is required. To install:
+```
+sudo apt-get install doxygen
+```
+
 ### Building and Flashing Firmware
 
 Once you have installed the AVR utilities (see [Installing AVR Utilities](#installing-avr-utilities)), you can build and flash
@@ -32,7 +39,7 @@ make flash
 
 ### Documentation
 
-To view documentation for firmware:
+To build documentation, you must have doxygen installed (see [Installing Doxygen](#installing-doxygen)). To build and view documentation for firmware:
 ```
 cd firmware
 make docs
