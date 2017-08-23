@@ -19,7 +19,7 @@ To build firmware documentation, doxygen is required. To install:
 sudo apt-get install doxygen
 ```
 
-### Building and Flashing Firmware
+### Building Firmware
 
 Once you have installed the AVR utilities (see [Installing AVR Utilities](#installing-avr-utilities)), you can build and flash
 your board. The project is currently only tested on the ATMEGA2560.
@@ -31,7 +31,9 @@ cd firmware
 make
 ```
 
-Flashing happens over USB interface. Plug in Arduino MEGA2560, then run dmesg:
+### Flashing Firmware
+
+Flashing currently happens over the USB interface. Plug in Arduino MEGA2560, then run dmesg:
 ```
 dmesg | tail
 ```
@@ -48,10 +50,10 @@ You should see output similar to what is shown below:
 </pre>
 
 Given the port from the dmesg command, you can flash the board:
-```
+<pre>
 cd firmware
 make flash PORT=/dev/<b>ttyACM0</b>
-```
+</pre>
 
 ### Documentation
 
