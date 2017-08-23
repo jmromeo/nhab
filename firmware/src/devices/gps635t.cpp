@@ -13,21 +13,8 @@
 #include <stdint.h>
 
 #include "gps635t.h"
+#include "ublox6.h"
 #include "uart.h"
-
-
-
-/********************************************************************************/
-/********************** PRIVATE CONST EXPRESS ***********************************/
-/********************************************************************************/
-
-const char GPS635T::PSRF103::msgid[]           = "$PSRF103,";
-const char GPS635T::PSRF103::mode[]            = "00,";
-const char GPS635T::PSRF103::rate[]            = "00,";
-const char GPS635T::PSRF103::checksum_enable[] = "00";
-const char GPS635T::PSRF103::endmsg[]          = "\r\n";
-
-
 
 
 /********************************************************************************/
@@ -53,48 +40,52 @@ GPS635T::GPS635T(Uart *uart)
 
 
 /**
- * @brief Initializes GPS.
+ * @brief Disables the specified nmea sequence.
  *
- * @param nmea  By default, GPS is configured to output all NMEA sequences. Use
- *              nmea param to enable only the ones you would like.
- *                  
+ * @param nmeasequence NMEA Sequence to disable. See @link NMEAMessages NMEA Messages @endlink
+ *
  * Example usage:
  * @code
  *
  * GPS635T gps(&uart0);
  *
- * gps.Init((1 << GPS635T::GPGAA) | (1 << GPS635T::GPGLL));
+ * // disable GGA
+ * gps.DisableNmeaSequence(NMEA_ID_GGA);
  *
  * @endcode
  */
-void GPS635T::Init(uint8_t nmea)
+void GPS635T::DisableNmeaSequence(uint8_t nmeasequence)
 {
-  PSRF103 nmea_message; 
-  uint8_t i;
+  UbxMessage *message;
+  PayloadCfgMsg payload;  
+  char *data;
 
-  nmea_message.msg[0] = '0';
-  nmea_message.msg[2] = ',';
-  nmea_message.msg[3] = '\0';
+  payload.msgclass = NMEA_CLASS_STANDARD;
+  payload.msgid    = nmeasequence;
+  payload.rate[0]  = 0;
 
-  if (nmea != 0xFF)
-  {
-    for (i = 0; i < GPEND; i++)
-    {
-      if (!((1 << i) & nmea))
-      {
-        nmea_message.msg[1] = '0' + i;
-        _uart->Print(nmea_message.msgid);
-        _uart->Print(nmea_message.msg);
-        _uart->Print(nmea_message.mode);
-        _uart->Print(nmea_message.rate);
-        _uart->Print(nmea_message.checksum_enable);
-        _uart->Print(nmea_message.endmsg);
-      }
-    }
-  }
+  message->classid = UBX_CLASS_CFG;
+  message->classid = UBX_CFG_MSG;
+  message->length  = 3;
+
+  UBX6::CalculateChecksum(message, (void *)&payload);
+
+  // transmitting sync packets
+  _uart->Transmit(UBX_SYNCCHAR0);
+  _uart->Transmit(UBX_SYNCCHAR1);
+
+  // transmitting header data
+  _uart->Transmit(message->classid);
+  _uart->Transmit(message->msgid);
+  _uart->Transmit(message->length);
+
+  // transmitting payload data
+  data = (char *)&payload;
+  _uart->Transmit(data, message->length);  
+
+  // transmitting checksum
+  _uart->Transmit(message->checksumA);
+  _uart->Transmit(message->checksumB);
 }
-
-
-
 
 

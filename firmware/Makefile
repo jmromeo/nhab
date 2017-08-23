@@ -6,7 +6,9 @@
 # AVR Flags
 CPUSPEED=16000000UL
 MCUTARGET=atmega2560
-PROGRAMMER=usbtiny
+PROGRAMMER=wiring
+PORT=/dev/ttyACM0
+BAUD=115200
 
 # Project Flags
 PROJNAME=nhab
@@ -25,7 +27,7 @@ LDFLAGS=-mmcu=$(MCUTARGET)
 HDFLAGS=-O ihex -R ..eeprom 
 
 # Object/Source Files 
-DEVOBJ=uart.o gps635t.o
+DEVOBJ=uart.o gps635t.o ublox6.o
 
 _OBJ=main.o $(DEVOBJ)
 OBJ=$(patsubst %,$(OBJDIR)/%,$(_OBJ))
@@ -56,7 +58,7 @@ dump: $(PROJNAME).elf
 
 # flash 
 flash: $(PROJNAME).hex
-	avrdude -c $(PROGRAMMER) -p $(MCUTARGET) -U flash:w:$(PROJNAME).hex
+	avrdude -P $(PORT) -b $(BAUD) -c $(PROGRAMMER) -p $(MCUTARGET) -D -U flash:w:$(PROJNAME).hex
 
 # generate firmware documentation
 docs:

@@ -42,6 +42,7 @@ class Uart
     bool Available();
     char Receive();
     void Transmit(char byte);
+    void Transmit(void *byte, uint8_t numbytes);
     void Print(const char *byte);
 
 };

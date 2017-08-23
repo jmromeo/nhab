@@ -19,21 +19,20 @@ int main (void)
   cli();
 
 
+  _delay_ms(5000);
+
   // initializing uart0/1 with baud rate of 9600
-  uart0.Init(9600);
-  uart1.Init(9600);
+  uart0.Init(9600); // Arduino USB UART
+  uart1.Init(9600); // GPS UART
 
 
   // enabling interrupts globally
   sei();
 
 
-//  _delay_ms(10000);
-
-
   // initializing gps device
   GPS635T gps(&uart1);
-  gps.Init(1 << GPS635T::GPGAA);
+  gps.DisableNmeaSequence(NMEA_ID_GGA);
 
 
   while(1)
@@ -46,5 +45,6 @@ int main (void)
     }
   }
 }
+
 
 

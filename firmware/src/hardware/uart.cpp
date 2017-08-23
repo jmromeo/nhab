@@ -211,6 +211,38 @@ void Uart::Transmit(char byte)
 
 
 /**
+ * @brief Non-blocking uart transmit.
+ *        
+ * @param Pointer to bytes to transmit.
+ * @param Length in bytes to transmit.
+ *
+ * Adds data to transmit buffer then kicks off transmit buffer empty interrupt.
+ *
+ * Example usage:
+ * @code
+ * char byte[2] = {'1', '2'};
+ *
+ * uart0.Init(9600);
+ *
+ * uart0.transmit(byte, 2);
+ *
+ * @endcode
+ */
+void Uart::Transmit(void *byte, uint8_t numbytes)
+{
+  int i;
+  char *data;
+
+  data = (char *)byte;
+  for (i = 0; i < numbytes; i++)
+  {
+    Transmit(*data);
+    data++;
+  }
+}
+
+
+/**
  * @brief Prints characters 1 byte at a time until null terminator is reached.
  *
  * @param Pointer to character array with null terminator symbol at the end '\0'.

@@ -4,43 +4,21 @@
 #include <stdint.h>
 
 #include "uart.h"
+#include "ublox6.h"
 
 
-class GPS635T
+class GPS635T : private UBX6
 {
   private:
     Uart *_uart;
-    static const uint8_t MAX_MESSAGE_SIZE = 25;
-
-    // NMEA messages
-    struct PSRF103
-    {
-      static const char msgid[];
-      char              msg[4];
-      static const char mode[];
-      static const char rate[];
-      static const char checksum_enable[];
-      static const char endmsg[];
-    };
 
   public:
-
-    enum NmeaFormats
-    {
-      GPGAA = 0,
-      GPGLL,
-      GPGSA,
-      GPGSV,
-      GPRMC,
-      GPVTG,
-      GPEND
-    };
 
     // constructor
     GPS635T(Uart *uart);
 
-    // setup and access GPS data
-		void Init(uint8_t nmea = 0xFF);
+    // gps configuration
+    void DisableNmeaSequence(uint8_t nmeasequence);
 };
 
 
