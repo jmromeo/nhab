@@ -56,35 +56,35 @@ GPS635T::GPS635T(Uart *uart)
  */
 void GPS635T::DisableNmeaSequence(uint8_t nmeasequence)
 {
-  UbxMessage *message;
+  UbxMessage    message;
   PayloadCfgMsg payload;  
 
   payload.msgclass = NMEA_CLASS_STANDARD;
   payload.msgid    = nmeasequence;
   payload.rate[0]  = 0;
 
-  message->classid = UBX_CLASS_CFG;
-  message->msgid   = UBX_CFG_MSG;
-  message->length  = 3;
+  message.classid = UBX_CLASS_CFG;
+  message.msgid   = UBX_CFG_MSG;
+  message.length  = 3;
 
-  UBX6::CalculateChecksum(message, (void *)&payload);
+  UBX6::CalculateChecksum(&message, (void *)&payload, _uart);
 
   // transmitting sync packets
   _uart->Transmit(UBX_SYNCCHAR0);
   _uart->Transmit(UBX_SYNCCHAR1);
 
   // transmitting header data
-  _uart->Transmit(message->classid);
-  _uart->Transmit(message->msgid);
-  _uart->Transmit((uint8_t)(message->length & 0xFF));
-  _uart->Transmit((uint8_t)((message->length >> 8) & 0xFF));
+  _uart->Transmit(message.classid);
+  _uart->Transmit(message.msgid);
+  _uart->Transmit((uint8_t)(message.length & 0xFF));
+  _uart->Transmit((uint8_t)((message.length >> 8) & 0xFF));
 
   // transmitting payload data
-  _uart->Transmit((char *)&payload, message->length);  
+  _uart->Transmit((char *)&payload, message.length);  
 
   // transmitting checksum
-  _uart->Transmit(message->checksumA);
-  _uart->Transmit(message->checksumB);
+  _uart->Transmit(message.checksumA);
+  _uart->Transmit(message.checksumB);
 }
 
 

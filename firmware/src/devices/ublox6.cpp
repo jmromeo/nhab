@@ -47,9 +47,9 @@
  *
  * @endcode
  */
-void UBX6::CalculateChecksum(UbxMessage *ubxmessage, void *payload)
+void UBX6::CalculateChecksum(UbxMessage *ubxmessage, void *payload, Uart *uart)
 {
-  int i;
+  uint16_t i;
   char *data;
 
   ubxmessage->checksumA = 0; 
@@ -58,10 +58,13 @@ void UBX6::CalculateChecksum(UbxMessage *ubxmessage, void *payload)
   // checksum over message header
   ubxmessage->checksumA += ubxmessage->classid;
   ubxmessage->checksumB += ubxmessage->checksumA; 
+
   ubxmessage->checksumA += ubxmessage->msgid;
   ubxmessage->checksumB += ubxmessage->checksumA; 
+
   ubxmessage->checksumA += (uint8_t)(ubxmessage->length & 0xFF);
   ubxmessage->checksumB += ubxmessage->checksumA; 
+
   ubxmessage->checksumA += (uint8_t)((ubxmessage->length >> 8) & 0xFF);
   ubxmessage->checksumB += ubxmessage->checksumA; 
 
