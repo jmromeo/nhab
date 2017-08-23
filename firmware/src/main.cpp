@@ -25,6 +25,8 @@ int main (void)
   uart0.Init(9600); // Arduino USB UART
   uart1.Init(9600); // GPS UART
 
+  uart0.Print("Hello World\n");
+
 
   // enabling interrupts globally
   sei();

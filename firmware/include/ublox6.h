@@ -269,11 +269,11 @@ struct PayloadCfgMsg
 
 struct UbxMessage
 {
-  uint8_t classid;
-  uint8_t msgid;
-  uint8_t length;
-  uint8_t checksumA;
-  uint8_t checksumB;
+  uint8_t   classid;
+  uint8_t   msgid;
+  uint16_t  length;
+  uint8_t   checksumA;
+  uint8_t   checksumB;
 };
 
 class UBX6

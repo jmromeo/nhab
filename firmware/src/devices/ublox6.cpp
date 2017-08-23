@@ -56,13 +56,14 @@ void UBX6::CalculateChecksum(UbxMessage *ubxmessage, void *payload)
   ubxmessage->checksumB = 0; 
 
   // checksum over message header
-  data = (char *)ubxmessage;
-  for (i = 0; i < 3; i++)
-  {
-    ubxmessage->checksumA += *data;
-    ubxmessage->checksumB += ubxmessage->checksumA;
-    data++;
-  } 
+  ubxmessage->checksumA += ubxmessage->classid;
+  ubxmessage->checksumB += ubxmessage->checksumA; 
+  ubxmessage->checksumA += ubxmessage->msgid;
+  ubxmessage->checksumB += ubxmessage->checksumA; 
+  ubxmessage->checksumA += (uint8_t)(ubxmessage->length & 0xFF);
+  ubxmessage->checksumB += ubxmessage->checksumA; 
+  ubxmessage->checksumA += (uint8_t)((ubxmessage->length >> 8) & 0xFF);
+  ubxmessage->checksumB += ubxmessage->checksumA; 
 
   // checksum over payload
   data = (char *)payload;

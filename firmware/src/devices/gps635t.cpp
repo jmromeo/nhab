@@ -58,14 +58,13 @@ void GPS635T::DisableNmeaSequence(uint8_t nmeasequence)
 {
   UbxMessage *message;
   PayloadCfgMsg payload;  
-  char *data;
 
   payload.msgclass = NMEA_CLASS_STANDARD;
   payload.msgid    = nmeasequence;
   payload.rate[0]  = 0;
 
   message->classid = UBX_CLASS_CFG;
-  message->classid = UBX_CFG_MSG;
+  message->msgid   = UBX_CFG_MSG;
   message->length  = 3;
 
   UBX6::CalculateChecksum(message, (void *)&payload);
@@ -77,11 +76,11 @@ void GPS635T::DisableNmeaSequence(uint8_t nmeasequence)
   // transmitting header data
   _uart->Transmit(message->classid);
   _uart->Transmit(message->msgid);
-  _uart->Transmit(message->length);
+  _uart->Transmit((uint8_t)(message->length & 0xFF));
+  _uart->Transmit((uint8_t)((message->length >> 8) & 0xFF));
 
   // transmitting payload data
-  data = (char *)&payload;
-  _uart->Transmit(data, message->length);  
+  _uart->Transmit((char *)&payload, message->length);  
 
   // transmitting checksum
   _uart->Transmit(message->checksumA);
