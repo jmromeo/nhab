@@ -67,7 +67,7 @@ void GPS635T::DisableNmeaSequence(uint8_t nmeasequence)
   message.msgid   = UBX_CFG_MSG;
   message.length  = 3;
 
-  UBX6::CalculateChecksum(&message, (void *)&payload, _uart);
+  UBX6::CalculateChecksum(&message, (void *)&payload);
 
   // transmitting sync packets
   _uart->Transmit(UBX_SYNCCHAR0);
