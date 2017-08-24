@@ -37,20 +37,35 @@ server.listen(3000);
 
 // socket server connection callback
 io.on('connection', function (socket) {
-    console.log('a user connected');
+    var temp, alt, hum;
 
-    for (var i = 0; i < 1200; i++)
+    for (var j = 0; j < temperatureData.length; j++)
     {
-        temperatureData = Math.round(Math.random()*100);
-        altitudeData    = Math.round(Math.random()*50000);
-        humidityData    = Math.round(Math.random()*100);
-        socket.emit('AddData', { temperatureData, altitudeData, humidityData });
+        temp = temperatureData[j];
+        alt  = altitudeData[j];
+        hum  = humidityData[j];
+        socket.emit('AddData', { temp, alt, hum });
     }
 });
 
+// mimicing future data when we will receive data over uart, parse, then send to client to display
 setInterval(function() {
-    temperatureData = Math.round(Math.random()*100);
-    altitudeData    = Math.round(Math.random()*50000);
-    humidityData    = Math.round(Math.random()*100);
-    io.emit('AddData', { temperatureData, altitudeData, humidityData });
+    var temp, alt, hum, lastIndex;
+
+    temperatureData.push(Math.round(Math.random()*100));
+    altitudeData.push(Math.round(Math.random()*50000));
+    humidityData.push(Math.round(Math.random()*100));
+    lastIndex = temperatureData.length - 1;
+
+    temp = temperatureData[lastIndex];
+    alt  = altitudeData[lastIndex];
+    hum  = humidityData[lastIndex];
+
+    io.emit('AddData', { temp, alt, hum });
 }, 1000);
+
+
+
+
+
+

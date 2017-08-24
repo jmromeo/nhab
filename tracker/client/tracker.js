@@ -67,9 +67,9 @@ window.onload = function() {
 socket.on('connect', function(data) {
     socket.on('AddData', function(data) {
         console.log('Add Data:', data);
-        temperatureData.push(data.temperatureData);
-        altitudeData.push(data.altitudeData);
-        humidityData.push(data.humidityData);
+        temperatureData.push(data.temp);
+        altitudeData.push(data.alt);
+        humidityData.push(data.hum);
         chart.refreshChart();
     });
 });
