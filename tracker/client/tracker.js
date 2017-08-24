@@ -8,6 +8,10 @@ var humidityData = [];
 
 var socket = io();
 
+// need to wait until page is loaded to refresh chart data
+var pageLoaded = false;
+var chartLoaded = false;
+
 tooltipCallback = function(index)
 {
     document.getElementById("table-temperature-data").innerHTML = String(temperatureData[index]) + "°C";
@@ -17,13 +21,26 @@ tooltipCallback = function(index)
 }
 
 
+window.onload = function() {
+  console.log("Window On Load");
+  pageLoaded = true;
+}
+
 function initChart(data)
 {
+    // if page hasn't loaded yet we can't load chart data..wait for 10 ms and try again
+    if (!pageLoaded)
+    {
+        setTimeout(function() { initChart(data) }, 1000);  
+        return;
+    }
+
+
     temperatureData = data.temperatureData.slice();
     altitudeData    = data.altitudeData.slice();
     humidityData    = data.humidityData.slice();
-
-
+    
+    
     var visualizerConfig = 
     [
         // temperature data
@@ -36,7 +53,7 @@ function initChart(data)
             units: "°C",
             fill: "false"
         },
-
+    
         // altitude data
         {
             buttonId: "toggleAltitude",
@@ -47,7 +64,7 @@ function initChart(data)
             units: "Meters",
             fill: "start"
         },
-
+    
         // humidity data
         {
             buttonId: "toggleHumidity",
@@ -59,21 +76,31 @@ function initChart(data)
             fill: "false"
         }
     ];
-
+    
     chart = new DataVisualizer("linechart", visualizerConfig, 25, tooltipCallback);
-
+    
     chart.refreshChart();
+
+    chartLoaded = true;
+}
+
+function addData(data)
+{
+    temperatureData.push(data.temp);
+    altitudeData.push(data.alt);
+    humidityData.push(data.hum);
+
+    if (chartLoaded)
+    {
+        chart.refreshChart();
+    }
 }
 
 socket.on('connect', function(data) {
     socket.on('AddData', function(data) {
         console.log('Add Data:', data);
-
-        temperatureData.push(data.temp);
-        altitudeData.push(data.alt);
-        humidityData.push(data.hum);
-
-        chart.refreshChart();
+        
+        addData(data);
     });
 
     socket.on('InitData', function(data) {
@@ -81,6 +108,5 @@ socket.on('connect', function(data) {
 
         initChart(data);
     });
-
 });
 
