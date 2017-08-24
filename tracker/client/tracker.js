@@ -1,9 +1,16 @@
+
 // global accessor for html
 var chart;
 
 var temperatureData = [];
 var altitudeData = [];
 var humidityData = [];
+
+var socket = io();
+
+socket.on('connect', function(data) {
+  socket.emit('join', 'Hello World');
+});
 
 tooltipCallback = function(index)
 {
