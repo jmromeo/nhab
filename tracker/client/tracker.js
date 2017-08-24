@@ -8,10 +8,6 @@ var humidityData = [];
 
 var socket = io();
 
-socket.on('connect', function(data) {
-  socket.emit('join', 'Hello World');
-});
-
 tooltipCallback = function(index)
 {
     document.getElementById("table-temperature-data").innerHTML = String(temperatureData[index]) + "°C";
@@ -59,18 +55,7 @@ window.onload = function() {
 
     chart = new DataVisualizer("linechart", visualizerConfig, 25, tooltipCallback);
 
-    var time = moment();
-    console.log(time.format('h:mm.ssa'));
-    console.log(moment);
-
-    for (var i = 0; i < 1200; i++)
-    {
-//        chart.addDataPoint([Math.round(Math.random()*100), Math.round(Math.random()*50000), Math.round(Math.random()*360)]);
-        temperatureData.push(Math.round(Math.random()*100));
-        altitudeData.push(Math.round(Math.random()*50000));
-        humidityData.push(Math.round(Math.random()*100));
-    }
-
+    var i = 1200;
     document.getElementById("table-temperature-data").innerHTML = String(temperatureData[i-1]) + "°C";
     document.getElementById("table-altitude-data").innerHTML = String(altitudeData[i-1]) + "m";
     document.getElementById("table-humidity-data").innerHTML = String(humidityData[i-1]) + "%";
@@ -78,3 +63,14 @@ window.onload = function() {
 
     chart.refreshChart();
 };
+
+socket.on('connect', function(data) {
+    socket.on('AddData', function(data) {
+        console.log('Add Data:', data);
+        temperatureData.push(data.temperatureData);
+        altitudeData.push(data.altitudeData);
+        humidityData.push(data.humidityData);
+        chart.refreshChart();
+    });
+});
+
