@@ -37,18 +37,10 @@ server.listen(3000);
 
 // socket server connection callback
 io.on('connection', function (socket) {
-    var temp, alt, hum;
-
-    for (var j = 0; j < temperatureData.length; j++)
-    {
-        temp = temperatureData[j];
-        alt  = altitudeData[j];
-        hum  = humidityData[j];
-        socket.emit('AddData', { temp, alt, hum });
-    }
+    socket.emit('InitData', { temperatureData, altitudeData, humidityData });
 });
 
-// mimicing future data when we will receive data over uart, parse, then send to client to display
+// mimicking future data when we will receive data over uart, parse, then send to client to display
 setInterval(function() {
     var temp, alt, hum, lastIndex;
 

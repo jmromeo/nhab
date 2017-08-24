@@ -16,7 +16,14 @@ tooltipCallback = function(index)
     document.getElementById("table-packetnumber-data").innerHTML = String(index);
 }
 
-window.onload = function() {
+
+function initChart(data)
+{
+    temperatureData = data.temperatureData.slice();
+    altitudeData    = data.altitudeData.slice();
+    humidityData    = data.humidityData.slice();
+
+
     var visualizerConfig = 
     [
         // temperature data
@@ -55,22 +62,25 @@ window.onload = function() {
 
     chart = new DataVisualizer("linechart", visualizerConfig, 25, tooltipCallback);
 
-    var i = 1200;
-    document.getElementById("table-temperature-data").innerHTML = String(temperatureData[i-1]) + "°C";
-    document.getElementById("table-altitude-data").innerHTML = String(altitudeData[i-1]) + "m";
-    document.getElementById("table-humidity-data").innerHTML = String(humidityData[i-1]) + "%";
-    document.getElementById("table-packetnumber-data").innerHTML = String(i-1);
-
     chart.refreshChart();
-};
+}
 
 socket.on('connect', function(data) {
     socket.on('AddData', function(data) {
         console.log('Add Data:', data);
+
         temperatureData.push(data.temp);
         altitudeData.push(data.alt);
         humidityData.push(data.hum);
+
         chart.refreshChart();
     });
+
+    socket.on('InitData', function(data) {
+        console.log('Init Data:', data);
+
+        initChart(data);
+    });
+
 });
 
