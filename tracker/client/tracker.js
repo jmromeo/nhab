@@ -6,6 +6,8 @@ var temperatureData = [];
 var altitudeData = [];
 var humidityData = [];
 
+var sensorData = [];
+
 var socket = io();
 
 // need to wait until page is loaded to refresh chart data
@@ -35,47 +37,11 @@ function initChart(data)
         return;
     }
 
-
-    temperatureData = data.temperatureData.slice();
-    altitudeData    = data.altitudeData.slice();
-    humidityData    = data.humidityData.slice();
-    
-    
-    var visualizerConfig = 
-    [
-        // temperature data
-        {
-            buttonId: "toggleTemperature",
-            data: temperatureData,
-            datasetIndex: 0,
-            color: 'rgb(133, 255, 76)', 
-            name: "Temperature",
-            units: "°C",
-            fill: "false"
-        },
-    
-        // altitude data
-        {
-            buttonId: "toggleAltitude",
-            data: altitudeData,
-            datasetIndex: 1,
-            color: 'rgb(255, 141, 20)', 
-            name: "Altitude",
-            units: "Meters",
-            fill: "start"
-        },
-    
-        // humidity data
-        {
-            buttonId: "toggleHumidity",
-            data: humidityData,
-            datasetIndex: 2,
-            color: 'rgb(96, 233, 255)', 
-            name: "Humidity",
-            units: "%",
-            fill: "false"
-        }
-    ];
+    for (var i = 0; i < data.length; i++)
+    {
+        sensorData.push(data[i]);
+        visualizerConfig[i].data = sensorData[i];
+    }
     
     chart = new DataVisualizer("linechart", visualizerConfig, 25, tooltipCallback);
     
@@ -86,9 +52,10 @@ function initChart(data)
 
 function addData(data)
 {
-    temperatureData.push(data.temp);
-    altitudeData.push(data.alt);
-    humidityData.push(data.hum);
+    for (var i = 0; i < data.length; i++)
+    {
+        sensorData[i].push(data[i]);
+    }
 
     if (chartLoaded)
     {

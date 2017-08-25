@@ -15,7 +15,7 @@ for (var i = 0; i < 1200; i++)
 
 // socket server connection callback
 io.on('connection', function (socket) {
-    socket.emit('InitData', { temperatureData, altitudeData, humidityData });
+    socket.emit('InitData', [ temperatureData, altitudeData, humidityData ]);
 });
 
 
@@ -32,7 +32,7 @@ setInterval(function() {
     alt  = altitudeData[lastIndex];
     hum  = humidityData[lastIndex];
 
-    io.emit('AddData', { temp, alt, hum });
+    io.emit('AddData', [ temp, alt, hum ]);
 }, 1000);
 
 module.exports = io;

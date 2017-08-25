@@ -16,7 +16,5 @@ app.get('/', function(req, res) {
 });
 
 server.listen(3000);
-
-// don't attach socket to server until window is completely loaded
 io.attach(server);
 
