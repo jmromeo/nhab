@@ -1,33 +1,36 @@
+/**
+* @fileOverview This file controls data flow to the chart from the socket
+*               connection to the server. Configuration of which data to
+*               show and how to show it can be found in tracker_config.js.
+*/
 
-// global accessor for html
-var chart;
+var chart; ///< Global chart variable for access in html.
+var sensorData = []; ///< Array of different sensor data that is filled by server over socketio
+var socket = io(); ///< Client socket.
 
-var temperatureData = [];
-var altitudeData = [];
-var humidityData = [];
+var pageLoaded = false; ///< True when window.onload() is called, signifying page has finished loading.
+var chartLoaded = false; ///< True when chart has been initialized.
 
-var sensorData = [];
 
-var socket = io();
-
-// need to wait until page is loaded to refresh chart data
-var pageLoaded = false;
-var chartLoaded = false;
-
+/**
+ * Tooltip callback that gets called when a datapoint is hovered over.
+ */
 tooltipCallback = function(index)
 {
-    document.getElementById("table-temperature-data").innerHTML = String(temperatureData[index]) + "°C";
-    document.getElementById("table-altitude-data").innerHTML = String(altitudeData[index]) + "m";
-    document.getElementById("table-humidity-data").innerHTML = String(humidityData[index]) + "%";
-    document.getElementById("table-packetnumber-data").innerHTML = String(index);
+    for (var i = 0; i < sensorData.length; i++)
+    {
+        document.getElementById(tableData[i].id).innerHTML = String(sensorData[i][index]) + tableData[i].units;
+    }
+
+    document.getElementById(tableData[sensorData.length]).innerHTML = String(index);
 }
 
 
-window.onload = function() {
-  console.log("Window On Load");
-  pageLoaded = true;
-}
-
+/**
+ * Sets up the chart with data received from the socket connection. Also
+ * sets a variable signifying that the chart has been loaded and ready
+ * to be accessed.
+ */
 function initChart(data)
 {
     // if page hasn't loaded yet we can't load chart data..wait for 10 ms and try again
@@ -50,6 +53,10 @@ function initChart(data)
     chartLoaded = true;
 }
 
+
+/**
+ * Adds specified data to the chart.
+ */
 function addData(data)
 {
     for (var i = 0; i < data.length; i++)
@@ -63,16 +70,23 @@ function addData(data)
     }
 }
 
+
+/**
+ * Called when window has finished loading. Setting a global variable
+ * that tracks that the page has finished loading. Useful as we can't
+ * access the chart until the page has completly loaded.
+ */
+window.onload = function() {
+    pageLoaded = true;
+}
+
+
 socket.on('connect', function(data) {
     socket.on('AddData', function(data) {
-        console.log('Add Data:', data);
-        
         addData(data);
     });
 
     socket.on('InitData', function(data) {
-        console.log('Init Data:', data);
-
         initChart(data);
     });
 });

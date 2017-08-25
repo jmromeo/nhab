@@ -3,7 +3,6 @@ var visualizerConfig =
     // temperature data
     {
         buttonId: "toggleTemperature",
-//        data: NEEDS TO BE FILLED IN BEFORE THIS IS USED 
         datasetIndex: 0,
         color: 'rgb(133, 255, 76)', 
         name: "Temperature",
@@ -14,7 +13,6 @@ var visualizerConfig =
     // altitude data
     {
         buttonId: "toggleAltitude",
-//        data: NEEDS TO BE FILLED IN BEFORE THIS IS USED 
         datasetIndex: 1,
         color: 'rgb(255, 141, 20)', 
         name: "Altitude",
@@ -25,7 +23,6 @@ var visualizerConfig =
     // humidity data
     {
         buttonId: "toggleHumidity",
-//        data: NEEDS TO BE FILLED IN BEFORE THIS IS USED 
         datasetIndex: 2,
         color: 'rgb(96, 233, 255)', 
         name: "Humidity",
@@ -35,3 +32,27 @@ var visualizerConfig =
 ];
     
 
+
+// should follow same order as visualizerConfig 
+var tableData = 
+[
+    {
+        id: "table-temperature-data", 
+        units: "°C"
+    },
+
+    {
+        id: "table-altitude-data",
+        units: "m"
+    },
+
+    {
+        id: "table-humidity-data",
+        units: "%"
+    },
+
+    // packet number should always be last element
+    {
+        id:"table-packetnumber-data"
+    }
+];
