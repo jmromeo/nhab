@@ -22,7 +22,7 @@ tooltipCallback = function(index)
         document.getElementById(tableData[i].id).innerHTML = String(sensorData[i][index]) + tableData[i].units;
     }
 
-    document.getElementById(tableData[sensorData.length]).innerHTML = String(index);
+    document.getElementById(tableData[sensorData.length].id).innerHTML = String(index);
 }
 
 
